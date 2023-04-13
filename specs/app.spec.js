@@ -56,8 +56,8 @@ describe('fullTrim unit tests coverage', () => {
 describe('getTotal function unit tests coverage', () => {
     //Проверка, что функция getTotal была успешно загружена и является функцией
     it('test loads without error', () => {
-        expect(fullTrim).toBeDefined();
-        expect(typeof fullTrim).toBe('function');
+        expect(getTotal).toBeDefined();
+        expect(typeof getTotal).toBe('function');
     });
     // Тестирование функции getTotal с разными входными параметрами и ожидаемыми результатами с помощью test.each
     test.each`
