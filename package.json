@@ -25,5 +25,8 @@
     "babel-jest": "^29.3.1",
     "jest": "^29.3.1",
     "jsdoc": "^4.0.2"
+  },
+  "dependencies": {
+    "documentation": "^14.0.1"
   }
 }
