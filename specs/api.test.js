@@ -1,9 +1,7 @@
 import axios from "axios";
 import config from "../framework/config/config.js";
 
-const uniqueUsername = `testUser_${new Date().getTime()}`;
-const password = 'Pass_@507798';
-const invalidPassword = '123456';
+
 let UUID;
 let token = ''
 //Тест для проверки все ли работает
@@ -31,8 +29,8 @@ describe('API tests create user', () => {
     test('should create a new user', async () => {
         //console.log(uniqueUsername)
         let requestData = {
-            userName: uniqueUsername,
-            password: password,
+            userName: config.uniqueUsername,
+            password: config.password,
         };
 
         try {
@@ -58,8 +56,8 @@ describe('API tests create user', () => {
 
     test('error message when sending empty password', async () => {
         const requestData = {
-            userName: uniqueUsername,
-            password: invalidPassword,
+            userName: config.uniqueUsername,
+            password: config.invalidPassword,
         };
         try {
             let response = await axios.post(config.baseUrl + config.userAccPath,
@@ -82,8 +80,8 @@ describe('API tests create user', () => {
 
     test('should return error message when sending existing userName', async () => {
         let requestData = {
-            userName: uniqueUsername,
-            password: password,
+            userName: config.uniqueUsername,
+            password: config.password,
         };
         try {
             let response = await axios.post(config.baseUrl + config.userAccPath,
@@ -112,8 +110,8 @@ describe('API tests generate token', () => {
      */
     test('Should generate token for valid user', async () => {
         let requestData = {
-            userName: uniqueUsername,
-            password: password,
+            userName: config.uniqueUsername,
+            password: config.password,
         };
         try {
             let response = await axios.post(config.baseUrl + config.genAccTokenPath,
@@ -162,8 +160,8 @@ describe('API tests clearing user data', () => {
      */
     test('is the user authorized', async () => {
         let requestData = {
-            userName: uniqueUsername,
-            password: password,
+            userName: config.uniqueUsername,
+            password: config.password,
         };
         try {
             let response = await axios.post(config.baseUrl+ `/Account/v1/Authorized`,
