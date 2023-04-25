@@ -1,5 +1,6 @@
 import axios from "axios";
-const baseUrl = 'https://bookstore.demoqa.com';
+import config from "../framework/config/config.js";
+
 const uniqueUsername = `testUser_${new Date().getTime()}`;
 const password = 'Pass_@507798';
 const invalidPassword = '123456';
@@ -7,7 +8,8 @@ let UUID;
 let token = ''
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
-//     const response = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+//     console.log(config.baseUrl1)
+//     const response = await axios.get(config.baseUrl1+'/todos/1');
 //     console.log(response);
 //     expect(response.data.userId).toEqual(1);
 //     expect(response.data.id).toEqual(1);
@@ -34,7 +36,10 @@ describe('API tests create user', () => {
         };
 
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/User`, requestData);
+            let response = await axios.post(config.baseUrl+ config.userAccPath,
+                requestData,{
+                headers: config.headers
+            });
             expect(response.status).toEqual(201);
             expect(response.statusText).toBe('Created')
             expect(response.data.userID).toBeDefined();
@@ -57,8 +62,10 @@ describe('API tests create user', () => {
             password: invalidPassword,
         };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/User`, requestData, {
-                validateStatus: false,
+            let response = await axios.post(config.baseUrl + config.userAccPath,
+                requestData,{
+                headers: config.headers,
+                validateStatus: false
             });
             expect(response.status).toEqual(400);
             expect(response.statusText).toBe('Bad Request')
@@ -79,8 +86,10 @@ describe('API tests create user', () => {
             password: password,
         };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/User`, requestData, {
-                validateStatus: false,
+            let response = await axios.post(config.baseUrl + config.userAccPath,
+                requestData,{
+                headers: config.headers,
+                validateStatus: false
             });
             expect(response.status).toBe(406);
             expect(response.statusText).toBe('Not Acceptable')
@@ -107,8 +116,10 @@ describe('API tests generate token', () => {
             password: password,
         };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/GenerateToken`, requestData, {
-                validateStatus: false,
+            let response = await axios.post(config.baseUrl + config.genAccTokenPath,
+                requestData,{
+                headers: config.headers,
+                validateStatus: false
             });
             expect(response.status).toBe(200);
             expect(response.statusText).toBe('OK')
@@ -128,8 +139,10 @@ describe('API tests generate token', () => {
             password: null,
         };
         try {
-            const response = await axios.post(`${baseUrl}/Account/v1/GenerateToken`, requestData, {
-                validateStatus: false,
+            const response = await axios.post(config.baseUrl + config.genAccTokenPath,
+                requestData,{
+                headers: config.headers,
+                validateStatus: false
             });
             expect(response.status).toBe(400);
             expect(response.statusText).toBe('Bad Request')
@@ -153,10 +166,11 @@ describe('API tests clearing user data', () => {
             password: password,
         };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/Authorized`, requestData,
-                {
-                    headers: {Authorization: `Bearer ${token}`},
-                });
+            let response = await axios.post(config.baseUrl+ `/Account/v1/Authorized`,
+                requestData,{
+                headers: config.headers,
+                validateStatus: false
+            });
             expect(response.status).toEqual(200);
             expect(response.statusText).toBe('OK')
             expect(response.data).toEqual(true);
@@ -171,9 +185,10 @@ describe('API tests clearing user data', () => {
     test('clearing user data', async () => {
 
         try {
-            const response = await axios.delete(`${baseUrl}/Account/v1/User/{UUID}`,
+            const response = await axios.delete(config.baseUrl+ `/Account/v1/User/{UUID}`,
                 {
-                    headers: {Authorization: `Basic MTY4MTg4ODE3MzAzMXBhdmRlbToxNjgxODg4MTczMDMxcGF2ZGVt`},
+                    headers: {Authorization: `Basic MTY4MTg4ODE3MzAzMXBhdmRlbToxNjgxODg4MTczMDMxcGF2ZGVt`,
+                    accept: 'application/json'},
                 });
             expect(response.status).toBe(200);
             expect(response.statusText).toBe('OK')
