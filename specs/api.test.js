@@ -1,11 +1,12 @@
 import axios from "axios";
 import config from "../framework/config/config.js";
 import {generateRequestData} from "../framework/fixtures/fixture.js"
-import userCredentials from "../framework/config/config";
+import userCredentials from "../framework/fixtures/userCredentials.json";
 
+const id = new Date().getTime();
 let UUID;
 let token = ''
-let requestData = generateRequestData();
+let requestData = generateRequestData(id);
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
@@ -99,10 +100,7 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
-        let requestData = {
-            userName: config.uniqueUsername,
-            password: config.password,
-        };
+
         try {
             let response = await axios.post(config.baseUrl + `/Account/v1/Authorized`,
                 requestData, {
@@ -151,6 +149,7 @@ describe('invalid body tests', () => {
             userName: userCredentials.uniqueUsername,
             password: userCredentials.invalidPassword,
         };
+        console.log(requestData)
         try {
             let response = await axios.post(config.baseUrl + config.userAccPath,
                 requestData,{

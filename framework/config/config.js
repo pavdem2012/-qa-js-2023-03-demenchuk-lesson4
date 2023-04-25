@@ -6,9 +6,5 @@ module.exports = {
     headers : {
         accept: 'application/json',
         'Content-Type': 'application/json'
-    },
-    uniqueUsername : `testUser_${new Date().getTime()}`,
-    password : 'Pass_@507798',
-    invalidPassword : '123456'
-
+    }
   };

@@ -1,16 +1,7 @@
-//import config from "../framework/config/config.js";
-//import userCredentials from "../userCredentials.json";
 
-
-
-// let requestData = {
-//     userName: config.uniqueUsername,
-//     password: config.password,
-// };
-import userCredentials from "../config/config";
-
-export const generateRequestData = () => {
-    const uniqueUsername = userCredentials.uniqueUsername;
+import userCredentials from './userCredentials.json';
+export const generateRequestData = (id) => {
+    const uniqueUsername = `testUser_${id}`;
     const password = userCredentials.password;
     return {
         userName: uniqueUsername,
