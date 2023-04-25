@@ -63,24 +63,7 @@ describe('API tests create user', () => {
             console.error(error);
         }
     });
-    /**
-     * Получение информации о пользователе
-     */
-    /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
-    test('should get a info about user by UUID', async () => {
-        try {
-            let response = await axios.get(config.baseUrl + config.userAccPath+'/{UUID}',{
-                    headers: config.headers,
-                    validateStatus: false
-                });
-            expect(response.status).toBe(401);
-            expect(response.statusText).toBe('Unauthorized')
-            expect(response.data.code).toBe('1200');
-            expect(response.data.message).toBe('User not authorized!');
-        } catch (error) {
-            console.error(error);
-        }
-    });
+
 
 });
 
@@ -110,6 +93,7 @@ describe('API tests generate token', () => {
             console.error(error);
         }
     });
+
 });
     /**
      * Очистка тестового контура
@@ -133,6 +117,27 @@ describe('API tests clearing user data', () => {
             console.error(error);
         }
     });
+    /**
+     * Получение информации о пользователе
+     */
+    /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
+    test('should get a info about user by UUID', async () => {
+        try {
+            let response = await axios.get(config.baseUrl + config.userAccPath+'/{UUID}',{
+                headers: {accept: 'application/json',
+                        authorization: 'Basic cmV3cXF3ZXI6MTIzNDU2Nzg5QFJld3E=',
+                        Authorization: `$token`
+                },
+                validateStatus: false
+            });
+            expect(response.status).toBe(401);
+            expect(response.statusText).toBe('Unauthorized')
+            expect(response.data.code).toBe('1207');
+            expect(response.data.message).toBe('User not found!');
+        } catch (error) {
+            console.error(error);
+        }
+    });
 
     /**
      * Очистка пользовательских данных
@@ -143,7 +148,7 @@ describe('API tests clearing user data', () => {
             const response = await axios.delete(config.baseUrl + config.userAccPath+`/{UUID}`,
                 {
                     headers: {
-                        Authorization: `Basic MTY4MTg4ODE3MzAzMXBhdmRlbToxNjgxODg4MTczMDMxcGF2ZGVt`,
+                        Authorization: 'Basic MTY4MTg4ODE3MzAzMXBhdmRlbToxNjgxODg4MTczMDMxcGF2ZGVt',
                         accept: 'application/json'
                     },
                 });
