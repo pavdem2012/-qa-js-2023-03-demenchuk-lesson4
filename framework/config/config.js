@@ -7,4 +7,5 @@ module.exports = {
         accept: 'application/json',
         'Content-Type': 'application/json'
     }
+
   };
