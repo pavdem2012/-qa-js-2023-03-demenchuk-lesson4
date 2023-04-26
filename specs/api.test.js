@@ -1,7 +1,9 @@
-import axios from "axios";
+import axios, {request} from "axios";
 import config from "../framework/config/config.js";
 import {generateRequestData} from "../framework/fixtures/fixture.js"
 import userCredentials from "../framework/fixtures/userCredentials.json";
+import expect from "expect";
+import * as url from "url";
 
 
 let UUID;
@@ -77,7 +79,6 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
-
         try {
             let response = await axios.post(config.baseUrl + config.genAccTokenPath,
                 requestData, {
@@ -103,7 +104,6 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
-
         try {
             let response = await axios.post(config.baseUrl + `/Account/v1/Authorized`,
                 requestData, {
@@ -123,17 +123,17 @@ describe('API tests clearing user data', () => {
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('should get a info about user by UUID', async () => {
         try {
-            let response = await axios.get(config.baseUrl + config.userAccPath+'/{UUID}',{
-                headers: {accept: 'application/json',
-                        authorization: 'Basic cmV3cXF3ZXI6MTIzNDU2Nzg5QFJld3E=',
-                        Authorization: `$token`
+            let response = await axios.get(config.baseUrl + config.userAccPath+ `/${UUID}`,{
+                headers: {...config.headers,
+                        Authorization: `Bearer ${token}`
                 },
                 validateStatus: false
             });
-            expect(response.status).toBe(401);
-            expect(response.statusText).toBe('Unauthorized')
-            expect(response.data.code).toBe('1207');
-            expect(response.data.message).toBe('User not found!');
+            expect(response.status).toBe(200);
+            expect(response.statusText).toBe('OK')
+            expect(response.data.userId).toEqual(UUID);
+            expect(response.data.username).toEqual(requestData.userName);
+            expect(response.data.books).toBeDefined();
         } catch (error) {
             console.error(error);
         }
@@ -145,21 +145,36 @@ describe('API tests clearing user data', () => {
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('clearing user data', async () => {
         try {
-            const response = await axios.delete(config.baseUrl + config.userAccPath+`/{UUID}`,
+            const response = await axios.delete(config.baseUrl + config.userAccPath+`/${UUID}`,
                 {
-                    headers: {
-                        Authorization: 'Basic MTY4MTg4ODE3MzAzMXBhdmRlbToxNjgxODg4MTczMDMxcGF2ZGVt',
-                        accept: 'application/json'
-                    },
+                    headers: {...config.headers,
+                        Authorization: `Bearer ${token}`                    },
                 });
-            expect(response.status).toBe(200);
-            expect(response.statusText).toBe('OK')
-            expect(response.data.code).toBe('1207');
-            expect(response.data.message).toBe('User Id not correct!');
+            expect(response.status).toBe(204);
+            expect(response.statusText).toBe('No Content')
         } catch (error) {
             console.error(error);
         }
     });
+});
+/**
+ * Проверка удален ли пользователь
+ */
+test('delete check user by UUID', async () => {
+    try {
+        let response = await axios.get(config.baseUrl + config.userAccPath+ `/${UUID}`,{
+            headers: {...config.headers,
+                Authorization: `Bearer ${token}`
+            },
+            validateStatus: false
+        });
+        expect(response.status).toBe(401);
+        expect(response.statusText).toBe('Unauthorized')
+        expect(response.data.code).toBe('1207');
+        expect(response.data.message).toBe('User not found!');
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 describe('invalid body tests', () => {
@@ -172,6 +187,7 @@ describe('invalid body tests', () => {
             userName: userCredentials.uniqueUsername,
             password: userCredentials.invalidPassword,
         };
+
         try {
             let response = await axios.post(config.baseUrl + config.userAccPath,
                 requestData,{
