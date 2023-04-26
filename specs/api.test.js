@@ -1,4 +1,4 @@
-import axios, {request} from "axios";
+import axios from "axios";
 import config from "../framework/config/config.js";
 import {generateRequestData} from "../framework/fixtures/fixture.js"
 import userCredentials from "../framework/fixtures/userCredentials.json";
