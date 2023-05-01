@@ -1,5 +1,6 @@
 import config, {headers} from "../config/config.js";
 import axios from "axios";
+import * as url from "url";
 
 
 
@@ -23,5 +24,6 @@ export const bearerDelResp = async ({path , token}) => {
         headers: {...config.header, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
+
     return response;
 };

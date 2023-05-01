@@ -1,14 +1,20 @@
 import config from "../framework/config/config.js";
-import {generateRequestData} from "../framework/fixtures/fixture.js"
-import userCredentials from "../framework/fixtures/userCredentials.json";
-import expect from "expect";
+import {
+    generateBadPassRequestData,
+    generateCorrectRequestData,
+    generateNullBodyRequestData
+} from "../framework/fixtures/fixture.js"
 import {wtBearerResp, bearerGetResp, bearerDelResp} from "../framework/services/userService";
+import {bookGetResp, bookGetRespISBN, bookPostResp, bookPutResp, booksDelResp} from "../framework/services/bookService";
 
 
 let path = '';
-let UUID;
+export let ISBN1 = '';
+export let ISBN0 = '';
+export let UUID;
 let token = '';
-let requestData = generateRequestData();
+let requestData = generateCorrectRequestData();
+let badRequestData;
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
@@ -27,6 +33,19 @@ let requestData = generateRequestData();
 
 describe('API tests create user', () => {
     /**
+     * Проверка "Создание пользователя c ошибкой, пароль не подходит"
+     */
+
+    test('error message when sending empty password', async () => {
+        badRequestData = generateBadPassRequestData();
+        path = config.userAccPath;
+        let response = await wtBearerResp({requestData: badRequestData,path});
+        expect(response.status).toEqual(400);
+        expect(response.statusText).toBe('Bad Request')
+        expect(response.data.code).toBe('1300');
+        expect(response.data.message).toBe('Passwords must have at least one non alphanumeric character, one digit (\'0\'-\'9\'), one uppercase (\'A\'-\'Z\'), one lowercase (\'a\'-\'z\'), one special character and Password must be eight characters or longer.');
+    });
+    /**
      * Проверка "Создание пользователя успешно"
      */
     test('should create a new user', async () => {
@@ -36,7 +55,7 @@ describe('API tests create user', () => {
         expect(response.status).toEqual(201);
         expect(response.statusText).toBe('Created')
         expect(response.data.userID).toBeDefined();
-        expect(response.data.username).toEqual(requestData.userName);
+        expect(response.data.username).toEqual(badRequestData.userName);
         expect(response.data.books).toBeDefined();
         expect(Array.isArray(response.data.books)).toBe(true);
     });
@@ -60,6 +79,19 @@ describe('API tests create user', () => {
 describe('API tests generate token', () => {
 
     /**
+     * Проверка "Генерация токена c ошибкой"
+     */
+    test('returns an error message when body are not provided', async () => {
+        badRequestData = generateNullBodyRequestData();
+        path = config.genAccTokenPath;
+        let response = await wtBearerResp({requestData: badRequestData, path});
+        expect(response.status).toBe(400);
+        expect(response.statusText).toBe('Bad Request')
+        expect(response.data.code).toBe('1200');
+        expect(response.data.message).toBe('UserName and Password required.');
+
+    });
+    /**
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
@@ -71,7 +103,91 @@ describe('API tests generate token', () => {
         expect(response.data.token).toBeTruthy();
         token = response.data.token;
     });
+
 });
+    /**
+     * Тесты на операции с книгами
+     */
+describe("API tests with books",()=>{
+    /**
+     * Проверка получения списка всех книг
+     */
+     test('should get a book list', async () =>{
+        path = "/BookStore/v1/Books"
+        let responce = await  bookGetResp({path, token});
+        let books = responce.data.books;
+        ISBN1 = responce.data.books[1].isbn;
+        ISBN0 = responce.data.books[0].isbn;
+        expect(responce.status).toBe(200)
+        expect(responce.statusText).toBe('OK')
+        books.forEach(book => {
+            expect(book.isbn).toEqual(expect.any(String));
+            expect(book.title).toEqual(expect.any(String));
+            expect(book.subTitle).toEqual(expect.any(String));
+            expect(book.author).toEqual(expect.any(String));
+            expect(book.publish_date).toMatch(
+                /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.\d{3}Z$/
+            );
+            expect(book.publisher).toEqual(expect.any(String));
+            expect(book.pages).toEqual(expect.any(Number));
+            expect(book.description).toEqual(expect.any(String));
+            expect(book.website).toEqual(expect.any(String));
+        });
+    })
+    /**
+     * Проверка "Создание книги" - на самом деле эта ручка добавляет книги в "избранное пользователя"
+     */
+    test ('should can post book',async ()=>{
+        let responce = await bookPostResp({path,token});
+        expect(responce.status).toBe(201)
+        expect(responce.statusText).toBe('Created')
+        expect(responce.data.books[0].isbn).toEqual(ISBN0);
+    });
+
+    /**
+     * Проверка обновления книги
+     */
+    test ('should can put book', async () =>{
+        let responce = await bookPutResp({path,token});
+        expect(responce.status).toBe(200)
+        expect(responce.statusText).toBe('OK')
+        expect(responce.data.userId).toEqual(UUID);
+        expect(responce.data.username).toEqual(requestData.userName);
+        expect(responce.data.books[0].isbn).toEqual(ISBN1);
+        expect(responce.data.books[0].title).toEqual(expect.any(String));
+        expect(responce.data.books[0].subTitle).toEqual(expect.any(String));
+        expect(responce.data.books[0].author).toEqual(expect.any(String));
+        expect(responce.data.books[0].publish_date).toMatch(
+            /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.\d{3}Z$/
+        );
+        expect(responce.data.books[0].publisher).toEqual(expect.any(String));
+        expect(responce.data.books[0].pages).toEqual(expect.any(Number));
+        expect(responce.data.books[0].description).toEqual(expect.any(String));
+        expect(responce.data.books[0].website).toEqual(expect.any(String));
+    });
+    /**
+     * Проверка Получения информации о книге
+     */
+    /*С этой ручкой необходима помощь - ни при каком раскладе она не отдает одну книгу - только список
+    * могу конечно предложить костыль по вытягиванию нужной книги по ISBN? но это точно не метод*/
+    test('shoud can get book by isbn', async ()=>{
+        path = "/BookStore/v1/Books";
+        let responce = await  bookGetRespISBN({path, token});
+
+        //console.log('shoud can get book by isbn: ',responce)
+    })
+    /**
+     * Проверка удаления книги
+     */
+    test ('should can delete book', async () =>{
+        path = "/BookStore/v1/Books";
+        let response = await  booksDelResp({path, token});
+        expect(response.status).toBe(401);
+        expect(response.statusText).toBe('Unauthorized')
+        expect(response.data.code).toBe('1207');
+        expect(response.data.message).toBe('User Id not correct!');
+    })
+})
     /**
      * Очистка тестового контура
      */
@@ -101,6 +217,7 @@ describe('API tests clearing user data', () => {
         expect(response.data.books).toBeDefined();
     });
 
+
     /**
      * Очистка пользовательских данных
      */
@@ -122,41 +239,5 @@ describe('API tests clearing user data', () => {
     });
 });
 
-
-describe('invalid body tests', () => {
-    /**
-     * Проверка "Создание пользователя c ошибкой, пароль не подходит"
-     */
-
-    test('error message when sending empty password', async () => {
-        requestData = {
-            userName: userCredentials.uniqueUsername,
-            password: userCredentials.invalidPassword,
-        };
-        path = config.userAccPath;
-        let response = await wtBearerResp({requestData,path});
-        expect(response.status).toEqual(400);
-        expect(response.statusText).toBe('Bad Request')
-        expect(response.data.code).toBe('1300');
-        expect(response.data.message).toBe('Passwords must have at least one non alphanumeric character, one digit (\'0\'-\'9\'), one uppercase (\'A\'-\'Z\'), one lowercase (\'a\'-\'z\'), one special character and Password must be eight characters or longer.');
-    });
-
-    /**
-     * Проверка "Генерация токена c ошибкой"
-      */
-    test('returns an error message when body are not provided', async () => {
-        requestData = {
-            userName: null,
-            password: null,
-        };
-        path = config.genAccTokenPath;
-        let response = await wtBearerResp({requestData, path});
-        expect(response.status).toBe(400);
-        expect(response.statusText).toBe('Bad Request')
-        expect(response.data.code).toBe('1200');
-        expect(response.data.message).toBe('UserName and Password required.');
-
-    });
-});
 
 
