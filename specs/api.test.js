@@ -1,13 +1,18 @@
 import axios from "axios";
-const baseUrl = 'https://bookstore.demoqa.com';
-const uniqueUsername = `testUser_${new Date().getTime()}`;
-const password = 'Pass_@507798';
-const invalidPassword = '123456';
+import config from "../framework/config/config.js";
+import {generateRequestData} from "../framework/fixtures/fixture.js"
+import userCredentials from "../framework/fixtures/userCredentials.json";
+import expect from "expect";
+
+
+
 let UUID;
 let token = ''
+let requestData = generateRequestData();
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
-//     const response = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+//     console.log(config.baseUrl1)
+//     const response = await axios.get(config.baseUrl1+'/todos/1');
 //     console.log(response);
 //     expect(response.data.userId).toEqual(1);
 //     expect(response.data.id).toEqual(1);
@@ -17,28 +22,23 @@ let token = ''
 
 
 /**
- * Тесты на создание пользователя
+ * Тесты на создание пользователя и получения информации о нем
  */
 
 describe('API tests create user', () => {
-
     /**
      * Проверка "Создание пользователя успешно"
      */
-
     test('should create a new user', async () => {
-        //console.log(uniqueUsername)
-        let requestData = {
-            userName: uniqueUsername,
-            password: password,
-        };
-
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/User`, requestData);
+            let response = await axios.post(config.baseUrl+ config.userAccPath,
+                requestData,{
+                headers: config.headers
+            });
+            UUID = response.data.userID;
             expect(response.status).toEqual(201);
             expect(response.statusText).toBe('Created')
             expect(response.data.userID).toBeDefined();
-            UUID = response.data.userID;
             expect(response.data.username).toEqual(requestData.userName);
             expect(response.data.books).toBeDefined();
             expect(Array.isArray(response.data.books)).toBe(true);
@@ -46,42 +46,17 @@ describe('API tests create user', () => {
             console.error(error);
         }
     });
-
-    /**
-     * Проверка "Создание пользователя c ошибкой, пароль не подходит"
-     */
-
-    test('error message when sending empty password', async () => {
-        const requestData = {
-            userName: uniqueUsername,
-            password: invalidPassword,
-        };
-        try {
-            let response = await axios.post(`${baseUrl}/Account/v1/User`, requestData, {
-                validateStatus: false,
-            });
-            expect(response.status).toEqual(400);
-            expect(response.statusText).toBe('Bad Request')
-            expect(response.data.code).toBe('1300');
-            expect(response.data.message).toBe('Passwords must have at least one non alphanumeric character, one digit (\'0\'-\'9\'), one uppercase (\'A\'-\'Z\'), one lowercase (\'a\'-\'z\'), one special character and Password must be eight characters or longer.');
-        } catch (error) {
-            console.error(error);
-        }
-    });
-
     /**
      * Проверка "Создание пользователя c ошибкой, логин уже используется"
      */
 
     test('should return error message when sending existing userName', async () => {
-        let requestData = {
-            userName: uniqueUsername,
-            password: password,
-        };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/User`, requestData, {
-                validateStatus: false,
-            });
+            let response = await axios.post(config.baseUrl + config.userAccPath,
+                requestData,{
+                    headers: config.headers,
+                    validateStatus: false
+                });
             expect(response.status).toBe(406);
             expect(response.statusText).toBe('Not Acceptable')
             expect(response.data.code).toBe('1204');
@@ -90,6 +65,8 @@ describe('API tests create user', () => {
             console.error(error);
         }
     });
+
+
 });
 
 /**
@@ -102,14 +79,12 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
-        let requestData = {
-            userName: uniqueUsername,
-            password: password,
-        };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/GenerateToken`, requestData, {
-                validateStatus: false,
-            });
+            let response = await axios.post(config.baseUrl + config.genAccTokenPath,
+                requestData, {
+                    headers: config.headers,
+                    validateStatus: false
+                });
             expect(response.status).toBe(200);
             expect(response.statusText).toBe('OK')
             expect(response.data.status).toBe('Success');
@@ -119,43 +94,21 @@ describe('API tests generate token', () => {
             console.error(error);
         }
     });
-    /**
-     * Проверка "Генерация токена c ошибкой"
-      */
-    test('returns an error message when body are not provided', async () => {
-        let requestData = {
-            userName: null,
-            password: null,
-        };
-        try {
-            const response = await axios.post(`${baseUrl}/Account/v1/GenerateToken`, requestData, {
-                validateStatus: false,
-            });
-            expect(response.status).toBe(400);
-            expect(response.statusText).toBe('Bad Request')
-            expect(response.data.code).toBe('1200');
-            expect(response.data.message).toBe('UserName and Password required.');
-        } catch (error) {
-            console.error(error);
-        }
-    });
+
 });
-/**
- * Очистка тестового контура
- */
-describe('API tests clearing user data', () => {
     /**
-     * Проверка авторизован ли пользователь
+     * Очистка тестового контура
      */
+describe('API tests clearing user data', () => {
+        /**
+         * Проверка авторизован ли пользователь
+         */
     test('is the user authorized', async () => {
-        let requestData = {
-            userName: uniqueUsername,
-            password: password,
-        };
         try {
-            let response = await axios.post(`${baseUrl}/Account/v1/Authorized`, requestData,
-                {
-                    headers: {Authorization: `Bearer ${token}`},
+            let response = await axios.post(config.baseUrl + `/Account/v1/Authorized`,
+                requestData, {
+                    headers: config.headers,
+                    validateStatus: false
                 });
             expect(response.status).toEqual(200);
             expect(response.statusText).toBe('OK')
@@ -165,25 +118,113 @@ describe('API tests clearing user data', () => {
         }
     });
     /**
-     * Очистка пользовательских данных
+     * Получение информации о пользователе
      */
-    /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значени*/
-    test('clearing user data', async () => {
-
+    /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
+    test('should get a info about user by UUID', async () => {
         try {
-            const response = await axios.delete(`${baseUrl}/Account/v1/User/{UUID}`,
-                {
-                    headers: {Authorization: `Basic MTY4MTg4ODE3MzAzMXBhdmRlbToxNjgxODg4MTczMDMxcGF2ZGVt`},
-                });
+            let response = await axios.get(config.baseUrl + config.userAccPath+ `/${UUID}`,{
+                headers: {...config.headers,
+                        Authorization: `Bearer ${token}`
+                },
+                validateStatus: false
+            });
             expect(response.status).toBe(200);
             expect(response.statusText).toBe('OK')
-            expect(response.data.code).toBe('1207');
-            expect(response.data.message).toBe('User Id not correct!');
+            expect(response.data.userId).toEqual(UUID);
+            expect(response.data.username).toEqual(requestData.userName);
+            expect(response.data.books).toBeDefined();
         } catch (error) {
             console.error(error);
         }
     });
 
+    /**
+     * Очистка пользовательских данных
+     */
+    /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
+    test('clearing user data', async () => {
+        try {
+            const response = await axios.delete(config.baseUrl + config.userAccPath+`/${UUID}`,
+                {
+                    headers: {...config.headers,
+                        Authorization: `Bearer ${token}`                    },
+                });
+            expect(response.status).toBe(204);
+            expect(response.statusText).toBe('No Content')
+        } catch (error) {
+            console.error(error);
+        }
+    });
+});
+/**
+ * Проверка удален ли пользователь
+ */
+test('delete check user by UUID', async () => {
+    try {
+        let response = await axios.get(config.baseUrl + config.userAccPath+ `/${UUID}`,{
+            headers: {...config.headers,
+                Authorization: `Bearer ${token}`
+            },
+            validateStatus: false
+        });
+        expect(response.status).toBe(401);
+        expect(response.statusText).toBe('Unauthorized')
+        expect(response.data.code).toBe('1207');
+        expect(response.data.message).toBe('User not found!');
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+describe('invalid body tests', () => {
+    /**
+     * Проверка "Создание пользователя c ошибкой, пароль не подходит"
+     */
+
+    test('error message when sending empty password', async () => {
+        requestData = {
+            userName: userCredentials.uniqueUsername,
+            password: userCredentials.invalidPassword,
+        };
+
+        try {
+            let response = await axios.post(config.baseUrl + config.userAccPath,
+                requestData,{
+                    headers: config.headers,
+                    validateStatus: false
+                });
+            expect(response.status).toEqual(400);
+            expect(response.statusText).toBe('Bad Request')
+            expect(response.data.code).toBe('1300');
+            expect(response.data.message).toBe('Passwords must have at least one non alphanumeric character, one digit (\'0\'-\'9\'), one uppercase (\'A\'-\'Z\'), one lowercase (\'a\'-\'z\'), one special character and Password must be eight characters or longer.');
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    /**
+     * Проверка "Генерация токена c ошибкой"
+      */
+    test('returns an error message when body are not provided', async () => {
+        requestData = {
+            userName: null,
+            password: null,
+        };
+        try {
+            const response = await axios.post(config.baseUrl + config.genAccTokenPath,
+                requestData,{
+                headers: config.headers,
+                validateStatus: false
+            });
+            expect(response.status).toBe(400);
+            expect(response.statusText).toBe('Bad Request')
+            expect(response.data.code).toBe('1200');
+            expect(response.data.message).toBe('UserName and Password required.');
+        } catch (error) {
+            console.error(error);
+        }
+    });
 });
 
 
