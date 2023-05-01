@@ -2,7 +2,7 @@ import config from "../framework/config/config.js";
 import {generateRequestData} from "../framework/fixtures/fixture.js"
 import userCredentials from "../framework/fixtures/userCredentials.json";
 import expect from "expect";
-import {wtBearerResp, bearerGetResp, bearerDelResp} from "../framework/services/service";
+import {wtBearerResp, bearerGetResp, bearerDelResp} from "../framework/services/userService";
 
 
 let path = '';
