@@ -18,8 +18,6 @@ export const generateBadPassRequestData = () => {
     };
 };
 export const generateNullBodyRequestData = () => {
-
-    const password = userCredentials.invalidPassword;
     return {
         userName: null,
         password: null,
