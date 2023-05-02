@@ -22,7 +22,7 @@ export let ISBN0 = '';
 export let UUID;
 export let token = '';
 let responce;
-let requestData = generateCorrectRequestData();
+let validRequestData = generateCorrectRequestData();
 let badPassRequestData = generateBadPassRequestData();
 let nullBodyRequestData = generateNullBodyRequestData();
 //Тест для проверки все ли работает
@@ -57,12 +57,12 @@ describe('API tests create user', () => {
      * Проверка "Создание пользователя успешно"
      */
     test('should create a new user', async () => {
-        responce = await wtBearerResp({requestData:requestData,  path:config.userAccPath});
+        responce = await wtBearerResp({requestData:validRequestData,  path:config.userAccPath});
         UUID = responce.data.userID;
         expect(responce.status).toEqual(201);
         expect(responce.statusText).toBe('Created')
         expect(responce.data.userID).toBeDefined();
-        expect(responce.data.username).toEqual(requestData.userName);
+        expect(responce.data.username).toEqual(validRequestData.userName);
         expect(responce.data.books).toBeDefined();
         expect(Array.isArray(responce.data.books)).toBe(true);
     });
@@ -71,7 +71,7 @@ describe('API tests create user', () => {
      */
 
     test('should return error message when sending existing userName', async () => {
-        responce = await wtBearerResp({requestData:requestData,  path:config.userAccPath});
+        responce = await wtBearerResp({requestData:validRequestData,  path:config.userAccPath});
         expect(responce.status).toBe(406);
         expect(responce.statusText).toBe('Not Acceptable')
         expect(responce.data.code).toBe('1204');
@@ -100,7 +100,7 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
-        responce = await wtBearerResp({requestData:requestData, path:config.genAccTokenPath});
+        responce = await wtBearerResp({requestData:validRequestData, path:config.genAccTokenPath});
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.status).toBe('Success');
@@ -155,7 +155,7 @@ describe("API tests with books",()=>{
         expect(responce.status).toBe(200)
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
-        expect(responce.data.username).toEqual(requestData.userName);
+        expect(responce.data.username).toEqual(validRequestData.userName);
         expect(responce.data.books[0].isbn).toEqual(ISBN1);
         expect(responce.data.books[0].title).toEqual(expect.any(String));
         expect(responce.data.books[0].subTitle).toEqual(expect.any(String));
@@ -197,7 +197,7 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
-        responce = await wtBearerResp({requestData:requestData, path:config.authorizedUser});
+        responce = await wtBearerResp({requestData:validRequestData, path:config.authorizedUser});
         expect(responce.status).toEqual(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data).toEqual(true);
@@ -212,7 +212,7 @@ describe('API tests clearing user data', () => {
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
-        expect(responce.data.username).toEqual(requestData.userName);
+        expect(responce.data.username).toEqual(validRequestData.userName);
         expect(responce.data.books).toBeDefined();
     });
 
