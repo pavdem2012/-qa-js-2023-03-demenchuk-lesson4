@@ -1,12 +1,11 @@
 import config, {headers} from "../config/config.js";
 import axios from "axios";
 import {ISBN1,ISBN0, UUID} from "../../specs/api.test";
-let url;
+let url = config.baseUrl + config.booksOpsPath;
 let requestData;
 let response;
 
-export const bookGetResp = async ({path , token}) => {
-    let url = config.baseUrl + path;
+export const bookGetResp = async ({token}) => {
     response = await axios.get(url, {
         headers: {...headers, Authorization: `Bearer ${token}`},
         validateStatus: false
@@ -15,8 +14,8 @@ export const bookGetResp = async ({path , token}) => {
 };
 
 
-export const bookGetRespISBN = async ({path , token}) => {
-    url = new URL(config.baseUrl + path);
+export const bookGetRespISBN = async ({token}) => {
+    url = new URL(url);
     url.searchParams.set("ISBN", ISBN1)
     response = await axios.get(url, {
         headers: { ...headers, Authorization: `Bearer ${token}` },
@@ -25,8 +24,7 @@ export const bookGetRespISBN = async ({path , token}) => {
     return response.data;
 };
 
-export const bookPostResp = async ({path , token}) => {
-    url = config.baseUrl + path;
+export const bookPostResp = async ({token}) => {
     requestData = {
         "userId": `${UUID}`,
         "collectionOfIsbns": [
@@ -41,20 +39,18 @@ export const bookPostResp = async ({path , token}) => {
     });
     return response;
 };
-export const  bookPutResp = async ({path,token}) =>{
-    url = config.baseUrl + path + `/${ISBN0}`;
+export const  bookPutResp = async ({token}) =>{
     requestData = {
         "userId": `${UUID}`,
         "isbn": `${ISBN1}`
     }
-    response = await axios.put(url, requestData,{
+    response = await axios.put(url+ `/${ISBN0}`, requestData,{
         headers: {...headers, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
     return response;
 };
-export const booksDelResp = async ({path,token}) =>{
-    url = config.baseUrl + path;
+export const booksDelResp = async ({token}) =>{
     requestData = {
         "isbn": `${ISBN1}`,
         "userId": `${UUID}`

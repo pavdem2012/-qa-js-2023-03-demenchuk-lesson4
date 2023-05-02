@@ -113,8 +113,7 @@ describe("API tests with books",()=>{
      * Проверка получения списка всех книг
      */
      test('should get a book list', async () =>{
-        path = "/BookStore/v1/Books"
-        let responce = await  bookGetResp({path, token});
+        let responce = await  bookGetResp({token});
         let books = responce.data.books;
         ISBN1 = responce.data.books[1].isbn;
         ISBN0 = responce.data.books[0].isbn;
@@ -138,7 +137,7 @@ describe("API tests with books",()=>{
      * Проверка "Создание книги" - на самом деле эта ручка добавляет книги в "избранное пользователя"
      */
     test ('should can post book',async ()=>{
-        let responce = await bookPostResp({path,token});
+        let responce = await bookPostResp({token});
         expect(responce.status).toBe(201)
         expect(responce.statusText).toBe('Created')
         expect(responce.data.books[0].isbn).toEqual(ISBN0);
@@ -148,7 +147,7 @@ describe("API tests with books",()=>{
      * Проверка обновления книги
      */
     test ('should can put book', async () =>{
-        let responce = await bookPutResp({path,token});
+        let responce = await bookPutResp({token});
         expect(responce.status).toBe(200)
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
@@ -171,8 +170,7 @@ describe("API tests with books",()=>{
     /*С этой ручкой необходима помощь - ни при каком раскладе она не отдает одну книгу - только список
     * могу конечно предложить костыль по вытягиванию нужной книги по ISBN? но это точно не метод*/
     test('shoud can get book by isbn', async ()=>{
-        path = "/BookStore/v1/Books";
-        let responce = await  bookGetRespISBN({path, token});
+        let responce = await  bookGetRespISBN({token});
 
         //console.log('shoud can get book by isbn: ',responce)
     })
@@ -180,8 +178,7 @@ describe("API tests with books",()=>{
      * Проверка удаления книги
      */
     test ('should can delete book', async () =>{
-        path = "/BookStore/v1/Books";
-        let response = await  booksDelResp({path, token});
+        let response = await  booksDelResp({token});
         expect(response.status).toBe(401);
         expect(response.statusText).toBe('Unauthorized')
         expect(response.data.code).toBe('1207');
