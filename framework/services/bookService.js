@@ -1,11 +1,11 @@
 import config, {headers} from "../config/config.js";
 import axios from "axios";
-import {ISBN1,ISBN0, UUID} from "../../specs/api.test";
+import {ISBN1,ISBN0, UUID, token} from "../../specs/api.test";
 let url = config.baseUrl + config.booksOpsPath;
 let requestData;
 let response;
 
-export const bookGetResp = async ({token}) => {
+export const bookGetResp = async () => {
     response = await axios.get(url, {
         headers: {...headers, Authorization: `Bearer ${token}`},
         validateStatus: false
@@ -14,7 +14,7 @@ export const bookGetResp = async ({token}) => {
 };
 
 
-export const bookGetRespISBN = async ({token}) => {
+export const bookGetRespISBN = async () => {
     url = new URL(url);
     url.searchParams.set("ISBN", ISBN1)
     response = await axios.get(url, {
@@ -24,7 +24,7 @@ export const bookGetRespISBN = async ({token}) => {
     return response.data;
 };
 
-export const bookPostResp = async ({token}) => {
+export const bookPostResp = async () => {
     requestData = {
         "userId": `${UUID}`,
         "collectionOfIsbns": [
@@ -39,7 +39,7 @@ export const bookPostResp = async ({token}) => {
     });
     return response;
 };
-export const  bookPutResp = async ({token}) =>{
+export const  bookPutResp = async () =>{
     requestData = {
         "userId": `${UUID}`,
         "isbn": `${ISBN1}`
@@ -50,7 +50,7 @@ export const  bookPutResp = async ({token}) =>{
     });
     return response;
 };
-export const booksDelResp = async ({token}) =>{
+export const booksDelResp = async () =>{
     requestData = {
         "isbn": `${ISBN1}`,
         "userId": `${UUID}`
