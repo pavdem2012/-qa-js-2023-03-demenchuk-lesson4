@@ -48,8 +48,8 @@ describe('API tests create user', () => {
 
     test('error message when sending empty password', async () => {
         path = config.userAccPath;
-        let badRequestData = generateBadPassRequestData();
-        responce = await wtBearerResp({requestData: badRequestData, path});
+        let badPassRequestData = generateBadPassRequestData();
+        responce = await wtBearerResp({requestData: badPassRequestData, path});
         expect(responce.status).toEqual(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1300');
