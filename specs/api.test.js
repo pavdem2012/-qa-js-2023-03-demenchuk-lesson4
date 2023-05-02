@@ -23,8 +23,7 @@ export let UUID;
 export let token = '';
 let responce;
 let validRequestData = generateCorrectRequestData();
-let badPassRequestData = generateBadPassRequestData();
-let nullBodyRequestData = generateNullBodyRequestData();
+
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
@@ -47,7 +46,7 @@ describe('API tests create user', () => {
      */
 
     test('error message when sending empty password', async () => {
-        responce = await wtBearerResp({requestData: badPassRequestData, path:config.userAccPath});
+        responce = await wtBearerResp({requestData: generateBadPassRequestData(), path:config.userAccPath});
         expect(responce.status).toEqual(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1300');
@@ -89,7 +88,7 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена c ошибкой"
      */
     test('returns an error message when body are not provided', async () => {
-        responce = await wtBearerResp({requestData: nullBodyRequestData, path:config.genAccTokenPath});
+        responce = await wtBearerResp({requestData: generateNullBodyRequestData(), path:config.genAccTokenPath});
         expect(responce.status).toBe(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1200');
