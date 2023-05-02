@@ -17,12 +17,11 @@ import {
     booksDelResp
 } from "../framework/services/bookService";
 
-let responce;
-let path = '';
 export let ISBN1 = '';
 export let ISBN0 = '';
 export let UUID;
 export let token = '';
+let responce;
 let requestData = generateCorrectRequestData();
 let badPassRequestData = generateBadPassRequestData();
 let nullBodyRequestData = generateNullBodyRequestData();
