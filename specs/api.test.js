@@ -24,7 +24,8 @@ export let ISBN0 = '';
 export let UUID;
 export let token = '';
 let requestData = generateCorrectRequestData();
-
+let badPassRequestData = generateBadPassRequestData();
+let nullBodyRequestData = generateNullBodyRequestData();
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
@@ -47,8 +48,7 @@ describe('API tests create user', () => {
      */
 
     test('error message when sending empty password', async () => {
-        path = config.userAccPath;
-        let badPassRequestData = generateBadPassRequestData();
+        path = config.userAccPath;        
         responce = await wtBearerResp({requestData: badPassRequestData, path});
         expect(responce.status).toEqual(400);
         expect(responce.statusText).toBe('Bad Request')
@@ -92,7 +92,6 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена c ошибкой"
      */
     test('returns an error message when body are not provided', async () => {
-        let nullBodyRequestData = generateNullBodyRequestData();
         path = config.genAccTokenPath;
         responce = await wtBearerResp({requestData: nullBodyRequestData, path});
         expect(responce.status).toBe(400);
