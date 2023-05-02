@@ -4,8 +4,18 @@ import {
     generateCorrectRequestData,
     generateNullBodyRequestData
 } from "../framework/fixtures/fixture.js"
-import {wtBearerResp, bearerGetResp, bearerDelResp} from "../framework/services/userService";
-import {bookGetResp, bookGetRespISBN, bookPostResp, bookPutResp, booksDelResp} from "../framework/services/bookService";
+import {
+    wtBearerResp, 
+    bearerGetResp, 
+    bearerDelResp
+} from "../framework/services/userService";
+import {
+    bookGetResp, 
+    bookGetRespISBN, 
+    bookPostResp, 
+    bookPutResp, 
+    booksDelResp
+} from "../framework/services/bookService";
 
 
 let path = '';
@@ -14,7 +24,7 @@ export let ISBN0 = '';
 export let UUID;
 export let token = '';
 let requestData = generateCorrectRequestData();
-let badRequestData;
+let badRequestData = generateBadPassRequestData();;
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
@@ -37,7 +47,6 @@ describe('API tests create user', () => {
      */
 
     test('error message when sending empty password', async () => {
-        badRequestData = generateBadPassRequestData();
         path = config.userAccPath;
         let response = await wtBearerResp({requestData: badRequestData,path});
         expect(response.status).toEqual(400);
