@@ -48,8 +48,7 @@ describe('API tests create user', () => {
      */
 
     test('error message when sending empty password', async () => {
-        path = config.userAccPath;        
-        responce = await wtBearerResp({requestData: badPassRequestData, path});
+        responce = await wtBearerResp({requestData: badPassRequestData, path:config.userAccPath});
         expect(responce.status).toEqual(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1300');
@@ -59,8 +58,7 @@ describe('API tests create user', () => {
      * Проверка "Создание пользователя успешно"
      */
     test('should create a new user', async () => {
-        path = config.userAccPath;
-        responce = await wtBearerResp({requestData:requestData, path});
+        responce = await wtBearerResp({requestData:requestData,  path:config.userAccPath});
         UUID = responce.data.userID;
         expect(responce.status).toEqual(201);
         expect(responce.statusText).toBe('Created')
@@ -74,7 +72,7 @@ describe('API tests create user', () => {
      */
 
     test('should return error message when sending existing userName', async () => {
-        responce = await wtBearerResp({requestData:requestData, path});
+        responce = await wtBearerResp({requestData:requestData,  path:config.userAccPath});
         expect(responce.status).toBe(406);
         expect(responce.statusText).toBe('Not Acceptable')
         expect(responce.data.code).toBe('1204');
@@ -92,8 +90,7 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена c ошибкой"
      */
     test('returns an error message when body are not provided', async () => {
-        path = config.genAccTokenPath;
-        responce = await wtBearerResp({requestData: nullBodyRequestData, path});
+        responce = await wtBearerResp({requestData: nullBodyRequestData, path:config.genAccTokenPath});
         expect(responce.status).toBe(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1200');
@@ -104,8 +101,7 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
-        path = config.genAccTokenPath;
-        responce = await wtBearerResp({requestData:requestData, path});
+        responce = await wtBearerResp({requestData:requestData, path:config.genAccTokenPath});
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.status).toBe('Success');
@@ -202,8 +198,7 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
-        path = config.authorizedUser;
-        responce = await wtBearerResp({requestData:requestData, path});
+        responce = await wtBearerResp({requestData:requestData, path:config.authorizedUser});
         expect(responce.status).toEqual(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data).toEqual(true);
@@ -214,8 +209,7 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('should get a info about user by UUID', async () => {
-        path = config.userAccPath + `/${UUID}`;
-        responce = await bearerGetResp({path});
+        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`});
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
@@ -229,7 +223,7 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('clearing user data', async () => {
-        responce = await bearerDelResp({path});
+        responce = await bearerDelResp({path:config.userAccPath + `/${UUID}`});
         expect(responce.status).toBe(204);
         expect(responce.statusText).toBe('No Content')
     });
@@ -237,7 +231,7 @@ describe('API tests clearing user data', () => {
      * Проверка удален ли пользователь
      */
     test('delete check user by UUID', async () => {
-        responce = await bearerGetResp({path});
+        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`});
         expect(responce.status).toBe(401);
         expect(responce.statusText).toBe('Unauthorized')
         expect(responce.data.code).toBe('1207');
