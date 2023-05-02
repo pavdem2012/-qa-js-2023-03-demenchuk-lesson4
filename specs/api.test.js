@@ -24,7 +24,7 @@ export let ISBN0 = '';
 export let UUID;
 export let token = '';
 let requestData = generateCorrectRequestData();
-let badRequestData = generateBadPassRequestData();;
+
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
@@ -48,6 +48,7 @@ describe('API tests create user', () => {
 
     test('error message when sending empty password', async () => {
         path = config.userAccPath;
+        let badRequestData = generateBadPassRequestData();
         responce = await wtBearerResp({requestData: badRequestData, path});
         expect(responce.status).toEqual(400);
         expect(responce.statusText).toBe('Bad Request')
@@ -59,12 +60,12 @@ describe('API tests create user', () => {
      */
     test('should create a new user', async () => {
         path = config.userAccPath;
-        responce = await wtBearerResp({requestData, path});
+        responce = await wtBearerResp({requestData:requestData, path});
         UUID = responce.data.userID;
         expect(responce.status).toEqual(201);
         expect(responce.statusText).toBe('Created')
         expect(responce.data.userID).toBeDefined();
-        expect(responce.data.username).toEqual(badRequestData.userName);
+        expect(responce.data.username).toEqual(requestData.userName);
         expect(responce.data.books).toBeDefined();
         expect(Array.isArray(responce.data.books)).toBe(true);
     });
@@ -73,7 +74,7 @@ describe('API tests create user', () => {
      */
 
     test('should return error message when sending existing userName', async () => {
-        responce = await wtBearerResp({requestData, path});
+        responce = await wtBearerResp({requestData:requestData, path});
         expect(responce.status).toBe(406);
         expect(responce.statusText).toBe('Not Acceptable')
         expect(responce.data.code).toBe('1204');
@@ -91,9 +92,9 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена c ошибкой"
      */
     test('returns an error message when body are not provided', async () => {
-        badRequestData = generateNullBodyRequestData();
+        let nullBodyRequestData = generateNullBodyRequestData();
         path = config.genAccTokenPath;
-        responce = await wtBearerResp({requestData: badRequestData, path});
+        responce = await wtBearerResp({requestData: nullBodyRequestData, path});
         expect(responce.status).toBe(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1200');
@@ -105,7 +106,7 @@ describe('API tests generate token', () => {
      */
     test('Should generate token for valid user', async () => {
         path = config.genAccTokenPath;
-        responce = await wtBearerResp({requestData, path});
+        responce = await wtBearerResp({requestData:requestData, path});
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.status).toBe('Success');
@@ -203,7 +204,7 @@ describe('API tests clearing user data', () => {
          */
     test('is the user authorized', async () => {
         path = config.authorizedUser;
-        responce = await wtBearerResp({requestData, path});
+        responce = await wtBearerResp({requestData:requestData, path});
         expect(responce.status).toEqual(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data).toEqual(true);
