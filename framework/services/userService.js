@@ -2,31 +2,31 @@ import config, {headers} from "../config/config.js";
 import axios from "axios";
 import {token} from "../../specs/api.test";
 let url = config.baseUrl;
-let response;
+let responсe;
 
 
 
 
 export const wtBearerResp = async ({ requestData , path }) => {
-    response = await axios.post(url + path, requestData, {
+    responсe = await axios.post(url + path, requestData, {
         headers: {...headers},
         validateStatus: false
     });
-    return response;
+    return responсe;
 };
 export const bearerGetResp = async ({path}) => {
-    response = await axios.get(url + path, {
+    responсe = await axios.get(url + path, {
         headers: {...headers, Authorization: `Bearer ${token}`},
         validateStatus: false
         });
-    return response;
+    return responсe;
 };
 
 export const bearerDelResp = async ({path}) => {
-    response = await axios.delete(url + path, {
+    responсe = await axios.delete(url + path, {
         headers: {...headers, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
 
-    return response;
+    return responсe;
 };
