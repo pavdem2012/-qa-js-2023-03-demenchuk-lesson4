@@ -2,7 +2,13 @@ module.exports =  {
     testEnvironment: 'node',
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.js', 'specs/**/*.js'],
-    reporters: ['default'],
+    reporters: ['default',
+        ["./node_modules/jest-html-reporter", {
+            "pageTitle": "Отчет о прохождении тестов",
+            "includeFailureMsg": true,
+
+        }]
+    ],
     moduleFileExtensions: ['js', 'json'],
     transform: {
       '^.+\\.jsx?$': 'babel-jest',
@@ -12,4 +18,5 @@ module.exports =  {
         testTimeout: 50000,
       },
       verbose: true,
+
 }
