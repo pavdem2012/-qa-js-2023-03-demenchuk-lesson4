@@ -1,6 +1,6 @@
 import config, {headers} from "../config/config.js";
 import axios from "axios";
-import {ISBN1,ISBN0, UUID} from "../../specs/api.test";
+//import {ISBN1,ISBN0, UUID} from "../../specs/api.test";
 let url = config.baseUrl + config.booksOpsPath;
 let requestData;
 let responce;
