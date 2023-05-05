@@ -10,17 +10,19 @@ import {
     bearerDelResp
 } from "../framework/services/userService";
 import {
-    bookGetResp, 
+    bookOpsResp,
     bookGetRespISBN, 
     bookPostResp, 
     bookPutResp, 
     booksDelResp
 } from "../framework/services/bookService";
+import expect from "expect";
 
-export let ISBN1 = '';
-export let ISBN0 = '';
-export let UUID;
-export let token = '';
+let ISBN1;
+let ISBN0;
+let UUID;
+let method;
+let token;
 let responce;
 let validRequestData = generateCorrectRequestData();
 
@@ -107,6 +109,7 @@ describe('API tests generate token', () => {
         token = responce.data.token;
     });
 
+
 });
     /**
      * Тесты на операции с книгами
@@ -116,7 +119,8 @@ describe("API tests with books",()=>{
      * Проверка получения списка всех книг
      */
      test('should get a book list', async () =>{
-        responce = await  bookGetResp();
+         method = "get"
+         responce = await  bookOpsResp({ token:token,method:method });
         let books = responce.data.books;
         ISBN1 = responce.data.books[1].isbn;
         ISBN0 = responce.data.books[0].isbn;
@@ -140,7 +144,8 @@ describe("API tests with books",()=>{
      * Проверка "Создание книги" - на самом деле эта ручка добавляет книги в "избранное пользователя"
      */
     test ('should can post book',async ()=>{
-        responce = await bookPostResp();
+        method = 'post'
+        responce = await bookOpsResp({ token:token,method:method,isbn:ISBN0,uuid:UUID });
         expect(responce.status).toBe(201)
         expect(responce.statusText).toBe('Created')
         expect(responce.data.books[0].isbn).toEqual(ISBN0);
@@ -150,7 +155,8 @@ describe("API tests with books",()=>{
      * Проверка обновления книги
      */
     test ('should can put book', async () =>{
-        responce = await bookPutResp();
+        method = 'put'
+        responce = await bookOpsResp({ token:token, method:method, isbna:ISBN1, isbn:ISBN0, uuid:UUID });
         expect(responce.status).toBe(200)
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
@@ -170,22 +176,21 @@ describe("API tests with books",()=>{
     /**
      * Проверка Получения информации о книге
      */
-    /*С этой ручкой необходима помощь - ни при каком раскладе она не отдает одну книгу - только список
-    * могу конечно предложить костыль по вытягиванию нужной книги по ISBN? но это точно не метод*/
+    /*Поправлено*/
     test('shoud can get book by isbn', async ()=>{
-        responce = await  bookGetRespISBN();
-
-        //console.log('shoud can get book by isbn: ',responce)
+        responce = await  bookGetRespISBN({ token:token,isbn:ISBN1 });
+        expect(responce.status).toBe(200);
+        expect(responce.statusText).toBe('OK');
+        expect(responce.data.isbn).toBe(ISBN1);
     })
     /**
      * Проверка удаления книги
      */
     test ('should can delete book', async () =>{
-        responce = await  booksDelResp();
-        expect(responce.status).toBe(401);
-        expect(responce.statusText).toBe('Unauthorized')
-        expect(responce.data.code).toBe('1207');
-        expect(responce.data.message).toBe('User Id not correct!');
+        method = 'delete';
+        responce = await  bookOpsResp({ token:token, method:method,isbna:ISBN1,uuid:UUID });
+        expect(responce.status).toBe(204);
+        expect(responce.statusText).toBe('No Content')
     })
 })
     /**
@@ -196,8 +201,9 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
-        responce = await wtBearerResp({requestData:validRequestData, path:config.authorizedUser});
+        responce = await wtBearerResp({requestData:validRequestData, path:config.authorizedUser,token:token });
         expect(responce.status).toEqual(200);
+
         expect(responce.statusText).toBe('OK')
         expect(responce.data).toEqual(true);
 
@@ -207,7 +213,7 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('should get a info about user by UUID', async () => {
-        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`});
+        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`,token:token });
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
@@ -221,7 +227,7 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('clearing user data', async () => {
-        responce = await bearerDelResp({path:config.userAccPath + `/${UUID}`});
+        responce = await bearerDelResp({path:config.userAccPath + `/${UUID}`,token:token });
         expect(responce.status).toBe(204);
         expect(responce.statusText).toBe('No Content')
     });
@@ -229,7 +235,7 @@ describe('API tests clearing user data', () => {
      * Проверка удален ли пользователь
      */
     test('delete check user by UUID', async () => {
-        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`});
+        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`,token:token });
         expect(responce.status).toBe(401);
         expect(responce.statusText).toBe('Unauthorized')
         expect(responce.data.code).toBe('1207');
