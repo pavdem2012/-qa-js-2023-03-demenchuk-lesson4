@@ -12,7 +12,7 @@ export const bookOpsResp = async ({token,method,uuid,isbn,isbna}) => {
         validateStatus: false
     });
     return responce;
-    }if(method === 'post'){
+    }else if(method === 'post'){
         requestData = {
             "userId": `${uuid}`,
             "collectionOfIsbns": [
@@ -26,7 +26,7 @@ export const bookOpsResp = async ({token,method,uuid,isbn,isbna}) => {
             validateStatus: false
         });
     return responce;
-    }if(method === 'put'){
+    }else if(method === 'put'){
         requestData = {
             "userId": `${uuid}`,
             "isbn": `${isbna}`
@@ -36,7 +36,7 @@ export const bookOpsResp = async ({token,method,uuid,isbn,isbna}) => {
             validateStatus: false
         });
     return responce;
-    }if(method === 'delete'){
+    }else if(method === 'delete'){
         requestData = {
             "isbn": `${isbna}`,
             "userId": `${uuid}`
