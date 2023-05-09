@@ -4,6 +4,7 @@ module.exports = {
     userAccPath: '/Account/v1/User',
     genAccTokenPath: '/Account/v1/GenerateToken',
     authorizedUser: '/Account/v1/Authorized',
+    booksOpsPath: '/BookStore/v1/Books',
     headers : {
         "accept": "application/json",
         "Content-Type": "application/json"

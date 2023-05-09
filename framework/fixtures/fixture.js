@@ -1,10 +1,25 @@
 
 import userCredentials from './userCredentials.json';
-export const generateRequestData = () => {
-    const uniqueUsername = `testUser_${new Date().getTime()}`;
+const uniqueUsername = `testUser_${new Date().getTime()}`;
+export const generateCorrectRequestData = () => {
+
     const password = userCredentials.password;
     return {
         userName: uniqueUsername,
         password: password,
+    };
+};
+export const generateBadPassRequestData = () => {
+
+    const password = userCredentials.invalidPassword;
+    return {
+        userName: uniqueUsername,
+        password: password,
+    };
+};
+export const generateNullBodyRequestData = () => {
+    return {
+        userName: null,
+        password: null,
     };
 };
