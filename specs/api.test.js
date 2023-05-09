@@ -10,18 +10,17 @@ import {
     bearerDelResp
 } from "../framework/services/userService";
 import {
-    bookOpsResp,
-    bookGetRespISBN, 
-    bookPostResp, 
-    bookPutResp, 
-    booksDelResp
+    getBooks,
+    getBook,
+    postBook,
+    updateBook,
+    deleteBook
 } from "../framework/services/bookService";
 import expect from "expect";
 
 let ISBN1;
 let ISBN0;
 let UUID;
-let method;
 let token;
 let responce;
 let validRequestData = generateCorrectRequestData();
@@ -29,7 +28,7 @@ let validRequestData = generateCorrectRequestData();
 //Тест для проверки все ли работает
 // test('should return correct data from API', async () => {
 //     console.log(config.baseUrl1)
-//     const response = await axios.get(config.baseUrl1+'/todos/1');
+//     const response = await axios.get(config.TYPICODE_BASE_URL+'/todos/1');
 //     console.log(response);
 //     expect(response.data.userId).toEqual(1);
 //     expect(response.data.id).toEqual(1);
@@ -48,7 +47,7 @@ describe('API tests create user', () => {
      */
 
     test('error message when sending empty password', async () => {
-        responce = await wtBearerResp({requestData: generateBadPassRequestData(), path:config.userAccPath});
+        responce = await wtBearerResp({requestData: generateBadPassRequestData(), path:config.USER_ACC_PATH});
         expect(responce.status).toEqual(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1300');
@@ -58,7 +57,7 @@ describe('API tests create user', () => {
      * Проверка "Создание пользователя успешно"
      */
     test('should create a new user', async () => {
-        responce = await wtBearerResp({requestData:validRequestData,  path:config.userAccPath});
+        responce = await wtBearerResp({requestData:validRequestData,  path:config.USER_ACC_PATH});
         UUID = responce.data.userID;
         expect(responce.status).toEqual(201);
         expect(responce.statusText).toBe('Created')
@@ -72,7 +71,7 @@ describe('API tests create user', () => {
      */
 
     test('should return error message when sending existing userName', async () => {
-        responce = await wtBearerResp({requestData:validRequestData,  path:config.userAccPath});
+        responce = await wtBearerResp({requestData:validRequestData,  path:config.USER_ACC_PATH});
         expect(responce.status).toBe(406);
         expect(responce.statusText).toBe('Not Acceptable')
         expect(responce.data.code).toBe('1204');
@@ -90,7 +89,7 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена c ошибкой"
      */
     test('returns an error message when body are not provided', async () => {
-        responce = await wtBearerResp({requestData: generateNullBodyRequestData(), path:config.genAccTokenPath});
+        responce = await wtBearerResp({requestData: generateNullBodyRequestData(), path:config.GEN_ACC_TOKEN_PATH});
         expect(responce.status).toBe(400);
         expect(responce.statusText).toBe('Bad Request')
         expect(responce.data.code).toBe('1200');
@@ -101,7 +100,7 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
-        responce = await wtBearerResp({requestData:validRequestData, path:config.genAccTokenPath});
+        responce = await wtBearerResp({requestData:validRequestData, path:config.GEN_ACC_TOKEN_PATH});
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.status).toBe('Success');
@@ -119,8 +118,7 @@ describe("API tests with books",()=>{
      * Проверка получения списка всех книг
      */
      test('should get a book list', async () =>{
-         method = "get"
-         responce = await  bookOpsResp({ token:token,method:method });
+         responce = await  getBooks({ token:token });
         let books = responce.data.books;
         ISBN1 = responce.data.books[1].isbn;
         ISBN0 = responce.data.books[0].isbn;
@@ -144,8 +142,7 @@ describe("API tests with books",()=>{
      * Проверка "Создание книги" - на самом деле эта ручка добавляет книги в "избранное пользователя"
      */
     test ('should can post book',async ()=>{
-        method = 'post'
-        responce = await bookOpsResp({ token:token,method:method,isbn:ISBN0,uuid:UUID });
+        responce = await postBook({ token:token,isbn:ISBN0,uuid:UUID });
         expect(responce.status).toBe(201)
         expect(responce.statusText).toBe('Created')
         expect(responce.data.books[0].isbn).toEqual(ISBN0);
@@ -155,8 +152,7 @@ describe("API tests with books",()=>{
      * Проверка обновления книги
      */
     test ('should can put book', async () =>{
-        method = 'put'
-        responce = await bookOpsResp({ token:token, method:method, isbna:ISBN1, isbn:ISBN0, uuid:UUID });
+        responce = await updateBook({ token:token, isbna:ISBN1, isbn:ISBN0, uuid:UUID });
         expect(responce.status).toBe(200)
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
@@ -178,7 +174,7 @@ describe("API tests with books",()=>{
      */
     /*Поправлено*/
     test('shoud can get book by isbn', async ()=>{
-        responce = await  bookGetRespISBN({ token:token,isbn:ISBN1 });
+        responce = await  getBook({ token:token,isbn:ISBN1 });
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK');
         expect(responce.data.isbn).toBe(ISBN1);
@@ -187,8 +183,7 @@ describe("API tests with books",()=>{
      * Проверка удаления книги
      */
     test ('should can delete book', async () =>{
-        method = 'delete';
-        responce = await  bookOpsResp({ token:token, method:method,isbna:ISBN1,uuid:UUID });
+        responce = await  deleteBook({ token:token, isbna:ISBN1,uuid:UUID });
         expect(responce.status).toBe(204);
         expect(responce.statusText).toBe('No Content')
     })
@@ -201,7 +196,7 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
-        responce = await wtBearerResp({requestData:validRequestData, path:config.authorizedUser,token:token });
+        responce = await wtBearerResp({requestData:validRequestData, path:config.AUTORIZED_USER,token:token });
         expect(responce.status).toEqual(200);
 
         expect(responce.statusText).toBe('OK')
@@ -213,7 +208,7 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('should get a info about user by UUID', async () => {
-        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`,token:token });
+        responce = await bearerGetResp({path:config.USER_ACC_PATH + `/${UUID}`,token:token });
         expect(responce.status).toBe(200);
         expect(responce.statusText).toBe('OK')
         expect(responce.data.userId).toEqual(UUID);
@@ -227,7 +222,7 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('clearing user data', async () => {
-        responce = await bearerDelResp({path:config.userAccPath + `/${UUID}`,token:token });
+        responce = await bearerDelResp({path:config.USER_ACC_PATH + `/${UUID}`,token:token });
         expect(responce.status).toBe(204);
         expect(responce.statusText).toBe('No Content')
     });
@@ -235,7 +230,7 @@ describe('API tests clearing user data', () => {
      * Проверка удален ли пользователь
      */
     test('delete check user by UUID', async () => {
-        responce = await bearerGetResp({path:config.userAccPath + `/${UUID}`,token:token });
+        responce = await bearerGetResp({path:config.USER_ACC_PATH + `/${UUID}`,token:token });
         expect(responce.status).toBe(401);
         expect(responce.statusText).toBe('Unauthorized')
         expect(responce.data.code).toBe('1207');
