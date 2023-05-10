@@ -247,7 +247,7 @@ describe("API tests with books",()=>{
         expect(responce.statusText).toBe('No Content')
     })
     /**
-     * Проверка удаления книги  - получение 400 статус-кода для неавторизованного пользователя
+     * Проверка удаления книги  - получение 400 статус-кода для неверного запроса
      */
     /*Ошибка в документации - ожидаемый statusText = Error*/
     test ('should can delete book with 400 status code', async () =>{
