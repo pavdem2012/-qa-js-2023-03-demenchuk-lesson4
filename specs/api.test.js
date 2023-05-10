@@ -147,6 +147,28 @@ describe("API tests with books",()=>{
         expect(responce.statusText).toBe('Created')
         expect(responce.data.books[0].isbn).toEqual(ISBN0);
     });
+    /**
+     * Проверка "Создание книги" - получение 400 статус-кода при повторном добавлении книги
+     */
+    /*Ошибка в документации - ожидаемый statusText = Error*/
+    test ('should can post book with 400 status code',async ()=>{
+        responce = await postBook({ token:token,isbn:ISBN0,uuid:UUID });
+        expect(responce.status).toBe(400)
+        expect(responce.statusText).toBe('Bad Request')
+        expect(responce.data.code).toBe('1210');
+        expect(responce.data.message).toBe('ISBN already present in the User\'s Collection!');
+    });
+
+    /**
+     * Проверка "Создание книги" - получение 401 статус-кода для неавторизованного пользователя при добавлении книги
+     */
+    test ('should can post book with 401 status code',async ()=>{
+        responce = await postBook({ isbn:ISBN0,uuid:UUID });
+        expect(responce.status).toBe(401)
+        expect(responce.statusText).toBe('Unauthorized')
+        expect(responce.data.code).toBe('1200');
+        expect(responce.data.message).toBe('User not authorized!');
+    });
 
     /**
      * Проверка обновления книги
@@ -169,6 +191,29 @@ describe("API tests with books",()=>{
         expect(responce.data.books[0].description).toEqual(expect.any(String));
         expect(responce.data.books[0].website).toEqual(expect.any(String));
     });
+
+    /**
+     * Проверка "обновления книги" - получение 400 статус-кода при повторном добавлении книги
+     */
+    /*Ошибка в документации - ожидаемый statusText = Error*/
+    test ('should can put book with 400 status code',async ()=>{
+        responce = await updateBook({ token:token, isbna:ISBN1, isbn:ISBN1, uuid:UUID });
+        expect(responce.status).toBe(400)
+        expect(responce.statusText).toBe('Bad Request')
+        expect(responce.data.code).toBe('1206');
+        expect(responce.data.message).toBe('ISBN supplied is not available in User\'s Collection!');
+    });
+
+    /**
+     * Проверка " обновления книги" - получение 401 статус-кода для неавторизованного пользователя при добавлении книги
+     */
+    test ('should can put book with 401 status code',async ()=>{
+        responce = await updateBook({ isbna:ISBN1, isbn:ISBN0, uuid:UUID });
+        expect(responce.status).toBe(401)
+        expect(responce.statusText).toBe('Unauthorized')
+        expect(responce.data.code).toBe('1200');
+        expect(responce.data.message).toBe('User not authorized!');
+    });
     /**
      * Проверка Получения информации о книге
      */
@@ -179,13 +224,37 @@ describe("API tests with books",()=>{
         expect(responce.statusText).toBe('OK');
         expect(responce.data.isbn).toBe(ISBN1);
     })
+
+    /**
+     * Проверка Получения информации о книге - получение 400 статус-кода при отсутствии книги
+     */
+    /*Ошибка в документации - ожидаемый statusText = Not Found*/
+    test('shoud can get book by isbn  with 400 status code', async ()=>{
+
+        responce = await  getBook({ isbn:ISBN0 });
+        expect(responce.status).toBe(400);
+        expect(responce.statusText).toBe('Bad Request');
+        expect(responce.data.code).toBe('1205');
+        expect(responce.data.message).toBe('ISBN supplied is not available in Books Collection!');
+    })
     /**
      * Проверка удаления книги
      */
+    /*Ошибка в документации - ожидаемый statusText = Success*/
     test ('should can delete book', async () =>{
         responce = await  deleteBook({ token:token, isbna:ISBN1,uuid:UUID });
         expect(responce.status).toBe(204);
         expect(responce.statusText).toBe('No Content')
+    })
+    /**
+     * Проверка удаления книги  - получение 401 статус-кода для неавторизованного пользователя
+     */
+    test ('should can delete book with 401 status code', async () =>{
+        responce = await  deleteBook({ isbna:ISBN1,uuid:UUID });
+        expect(responce.status).toBe(401)
+        expect(responce.statusText).toBe('Unauthorized')
+        expect(responce.data.code).toBe('1200');
+        expect(responce.data.message).toBe('User not authorized!');
     })
 })
     /**
