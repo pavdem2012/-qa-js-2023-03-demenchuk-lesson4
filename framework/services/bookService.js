@@ -47,6 +47,7 @@ export const  updateBook = async ({token, isbna, isbn, uuid}) =>{
     return responce;
 };
 export const deleteBook = async ({token, isbna, uuid}) =>{
+    url = `${url.slice(0, -1)}`;
     requestData = {
         "isbn": `${isbna}`,
         "userId": `${uuid}`

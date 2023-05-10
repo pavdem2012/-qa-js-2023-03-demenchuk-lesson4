@@ -247,6 +247,17 @@ describe("API tests with books",()=>{
         expect(responce.statusText).toBe('No Content')
     })
     /**
+     * Проверка удаления книги  - получение 400 статус-кода для неавторизованного пользователя
+     */
+    /*Ошибка в документации - ожидаемый statusText = Error*/
+    test ('should can delete book with 400 status code', async () =>{
+        responce = await  deleteBook({ token:token, isbna:ISBN0,uuid:UUID });
+        expect(responce.status).toBe(400)
+        expect(responce.statusText).toBe('Bad Request')
+        expect(responce.data.code).toBe('1206');
+        expect(responce.data.message).toBe('ISBN supplied is not available in User\'s Collection!');
+    })
+    /**
      * Проверка удаления книги  - получение 401 статус-кода для неавторизованного пользователя
      */
     test ('should can delete book with 401 status code', async () =>{
