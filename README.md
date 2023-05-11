@@ -10,7 +10,9 @@
 `npm run test`
 
 
-## для запуска отчета аллюр выполнить команду
+## для запуска отчета аллюр последовательно выполнить команды
+`allure generate --clean `
+`cp -R allure-report/history allure-results`
 `allure serve allure-results`
 
 
