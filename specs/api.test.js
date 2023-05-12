@@ -55,8 +55,8 @@ describe('API tests create user', () => {
      */
 
     test('error message when sending  no valid password', async () => {
-        reporter.epic('Создание пользователя POST/Account/v1/User')
-                .feature('возврат 400 статус-кода при отправке не правильного пароля')
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Создание пользователя POST/Account/v1/User')
                 .description('возврат 400 статус-кода при отправке не правильного пароля')
                 .startStep(`register as ${JSON.stringify(generateBadPassRequestData())}`)
         response = await wtBearerResp({requestData: generateBadPassRequestData(), path:config.USER_ACC_PATH});
@@ -82,8 +82,8 @@ describe('API tests create user', () => {
      * Проверка "Создание пользователя успешно"
      */
     test('should create a new user', async () => {
-        reporter.epic('Создание пользователя POST/Account/v1/User')
-                .feature('возврат 201 статус-кода и валидного тела ответа при отправке валидного запроса')
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Создание пользователя POST/Account/v1/User')
                 .description('возврат 201 статус-кода и валидного тела ответа при отправке валидного запроса')
                 .severity(Severity.Blocker)
         reporter.startStep(`register as ${JSON.stringify(generateCorrectRequestData())}`)
@@ -116,8 +116,8 @@ describe('API tests create user', () => {
      */
 
     test('should return error message when sending existing userName', async () => {
-        reporter.epic('Создание пользователя POST/Account/v1/User')
-                .feature('возврат 406 статус-кода и валидного тела ответа при отправке повторного валидного запроса')
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Создание пользователя POST/Account/v1/User')
                 .description('возврат 406 статус-кода и валидного тела ответа при отправке повторного валидного запроса')
                 .startStep(`register as ${JSON.stringify(generateCorrectRequestData())}`)
         response = await wtBearerResp({requestData:validRequestData,  path:config.USER_ACC_PATH});
@@ -149,8 +149,8 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена c ошибкой"
      */
     test('returns an error message when body are not provided', async () => {
-        reporter.epic('Генерация токена POST/Account/v1/GenerateToken')
-                .feature('возврат 400 статус-кода и валидного тела ответа при отправке пустых полей в теле запроса')
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Генерация токена POST/Account/v1/GenerateToken')
                 .description('возврат 400 статус-кода и валидного тела ответа при отправке  пустых полей в теле запроса')
                 .startStep('send a request')
         response = await wtBearerResp({requestData: generateNullBodyRequestData(), path:config.GEN_ACC_TOKEN_PATH});
@@ -174,8 +174,8 @@ describe('API tests generate token', () => {
      * Проверка "Генерация токена успешно"
      */
     test('Should generate token for valid user', async () => {
-        reporter.epic('Генерация токена POST/Account/v1/GenerateToken')
-                .feature('возврат 200 статус-кода и валидного тела ответа при отправке валидного запроса')
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Генерация токена POST/Account/v1/GenerateToken')
                 .description('возврат 200 статус-кода и валидного тела ответа при отправке валидного запроса')
                 .startStep('send a request')
         response = await wtBearerResp({requestData:validRequestData, path:config.GEN_ACC_TOKEN_PATH});
@@ -207,6 +207,8 @@ describe("API tests with books",()=>{
      * Проверка получения списка всех книг
      */
      test('should get a book list', async () =>{
+         reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
          response = await  getBooks({ token:token });
         let books = response.data.books;
         ISBN1 = response.data.books[1].isbn;
@@ -231,6 +233,8 @@ describe("API tests with books",()=>{
      * Проверка "Создание книги" - на самом деле эта ручка добавляет книги в "избранное пользователя"
      */
     test ('should can post book',async ()=>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await postBook({ token:token,isbn:ISBN0,uuid:UUID });
         expect(response.status).toBe(201)
         expect(response.statusText).toBe('Created')
@@ -241,6 +245,8 @@ describe("API tests with books",()=>{
      */
     /*Ошибка в документации - ожидаемый statusText = Error*/
     test ('should can post book with 400 status code',async ()=>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await postBook({ token:token,isbn:ISBN0,uuid:UUID });
         expect(response.status).toBe(400)
         expect(response.statusText).toBe('Bad Request')
@@ -252,6 +258,8 @@ describe("API tests with books",()=>{
      * Проверка "Создание книги" - получение 401 статус-кода для неавторизованного пользователя при добавлении книги
      */
     test ('should can post book with 401 status code',async ()=>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await postBook({ isbn:ISBN0,uuid:UUID });
         expect(response.status).toBe(401)
         expect(response.statusText).toBe('Unauthorized')
@@ -263,6 +271,8 @@ describe("API tests with books",()=>{
      * Проверка обновления книги
      */
     test ('should can put book', async () =>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await updateBook({ token:token, isbna:ISBN1, isbn:ISBN0, uuid:UUID });
         expect(response.status).toBe(200)
         expect(response.statusText).toBe('OK')
@@ -286,6 +296,8 @@ describe("API tests with books",()=>{
      */
     /*Ошибка в документации - ожидаемый statusText = Error*/
     test ('should can put book with 400 status code',async ()=>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await updateBook({ token:token, isbna:ISBN1, isbn:ISBN1, uuid:UUID });
         expect(response.status).toBe(400)
         expect(response.statusText).toBe('Bad Request')
@@ -297,6 +309,8 @@ describe("API tests with books",()=>{
      * Проверка " обновления книги" - получение 401 статус-кода для неавторизованного пользователя при добавлении книги
      */
     test ('should can put book with 401 status code',async ()=>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await updateBook({ isbna:ISBN1, isbn:ISBN0, uuid:UUID });
         expect(response.status).toBe(401)
         expect(response.statusText).toBe('Unauthorized')
@@ -308,6 +322,8 @@ describe("API tests with books",()=>{
      */
     /*Поправлено*/
     test('shoud can get book by isbn', async ()=>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await  getBook({ token:token,isbn:ISBN1 });
         expect(response.status).toBe(200);
         expect(response.statusText).toBe('OK');
@@ -319,7 +335,8 @@ describe("API tests with books",()=>{
      */
     /*Ошибка в документации - ожидаемый statusText = Not Found*/
     test('shoud can get book by isbn  with 400 status code', async ()=>{
-
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await  getBook({ isbn:ISBN0 });
         expect(response.status).toBe(400);
         expect(response.statusText).toBe('Bad Request');
@@ -331,6 +348,8 @@ describe("API tests with books",()=>{
      */
     /*Ошибка в документации - ожидаемый statusText = Success*/
     test ('should can delete book', async () =>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await  deleteBook({ token:token, isbna:ISBN1,uuid:UUID });
         expect(response.status).toBe(204);
         expect(response.statusText).toBe('No Content')
@@ -340,6 +359,8 @@ describe("API tests with books",()=>{
      */
     /*Ошибка в документации - ожидаемый statusText = Error*/
     test ('should can delete book with 400 status code', async () =>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await  deleteBook({ token:token, isbna:ISBN0,uuid:UUID });
         expect(response.status).toBe(400)
         expect(response.statusText).toBe('Bad Request')
@@ -350,6 +371,8 @@ describe("API tests with books",()=>{
      * Проверка удаления книги  - получение 401 статус-кода для неавторизованного пользователя
      */
     test ('should can delete book with 401 status code', async () =>{
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Операции с книгами')
         response = await  deleteBook({ isbna:ISBN1,uuid:UUID });
         expect(response.status).toBe(401)
         expect(response.statusText).toBe('Unauthorized')
@@ -365,24 +388,55 @@ describe('API tests clearing user data', () => {
          * Проверка авторизован ли пользователь
          */
     test('is the user authorized', async () => {
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Генерация токена POST/Account/v1/GenerateToken')
+                .description('возврат 200 статус-кода и валидного тела ответа при отправке валидного запроса')
+                .startStep(`send post request to ${config.BOOKSTORE_BASE_URL} ${config.AUTORIZED_USER} as ${JSON.stringify(validRequestData)}`)
         response = await wtBearerResp({requestData:validRequestData, path:config.AUTORIZED_USER,token:token });
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the response')
+                .startStep('Checking the returned status code')
         expect(response.status).toEqual(200);
-
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the statusText')
         expect(response.statusText).toBe('OK')
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the response data')
         expect(response.data).toEqual(true);
-
+        reporter.endStep(Status.Passed)
+                .endStep()
     });
     /**
      * Получение информации о пользователе
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('should get a info about user by UUID', async () => {
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Создание пользователя POST/Account/v1/User')
+                .description('возврат 200 статус-кода и валидного тела ответа при отправке валидного запроса')
+                .startStep(`send get request to: ${config.BOOKSTORE_BASE_URL} ${config.USER_ACC_PATH + `/${UUID}`}`)
         response = await bearerGetResp({path:config.USER_ACC_PATH + `/${UUID}`,token:token });
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the response')
+                .startStep('Checking the returned status code')
         expect(response.status).toBe(200);
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the returned statusText')
         expect(response.statusText).toBe('OK')
-        expect(response.data.userId).toEqual(UUID);
-        expect(response.data.username).toEqual(validRequestData.userName);
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the returned data.books toBeDefined')
         expect(response.data.books).toBeDefined();
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the returned data.books isArray')
+        expect(Array.isArray(response.data.books)).toBe(true);
+        reporter.endStep(Status.Passed)
+                .startStep(`Checking the returned data.userId toEqual ${UUID}`)
+        expect(response.data.userId).toEqual(UUID);
+        reporter.endStep(Status.Passed)
+                .startStep(`Checking the returned data.username toEqual ${validRequestData.userName}`)
+        expect(response.data.username).toEqual(validRequestData.userName);
+        reporter.endStep(Status.Passed)
+                .endStep()
     });
 
 
@@ -391,19 +445,45 @@ describe('API tests clearing user data', () => {
      */
     /* Предполагаю что данная функция в сваггер запрограммирована неверно {UUID} передается как строка, а не как значениe*/
     test('clearing user data', async () => {
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Очистка пользовательских данных DELETE/Account/v1/User')
+                .description('возврат 204 статус-кода и валидного тела ответа при отправке валидного запроса')
+                .startStep(`send delete request to: ${config.BOOKSTORE_BASE_URL} ${config.USER_ACC_PATH + `/${UUID}`}`)
         response = await bearerDelResp({path:config.USER_ACC_PATH + `/${UUID}`,token:token });
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the response')
+                .startStep('Checking the status code')
         expect(response.status).toBe(204);
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the statusText')
         expect(response.statusText).toBe('No Content')
+        reporter.endStep(Status.Passed)
+                .endStep()
     });
     /**
      * Проверка удален ли пользователь
      */
     test('delete check user by UUID', async () => {
+        reporter.epic('тест https://bookstore.demoqa.com')
+                .feature('Очистка пользовательских данных DELETE/Account/v1/User')
+                .description('возврат 401 статус-кода и валидного тела ответа при отправке валидного запроса при удаленном пользователе')
+                .startStep(`send get request to: ${config.BOOKSTORE_BASE_URL} ${config.USER_ACC_PATH + `/${UUID}`}`)
         response = await bearerGetResp({path:config.USER_ACC_PATH + `/${UUID}`,token:token });
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the response')
+                .startStep('Checking the status code')
         expect(response.status).toBe(401);
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the statusText')
         expect(response.statusText).toBe('Unauthorized')
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the data code')
         expect(response.data.code).toBe('1207');
+        reporter.endStep(Status.Passed)
+                .startStep('Checking the data message')
         expect(response.data.message).toBe('User not found!');
+        reporter.endStep(Status.Passed)
+                .endStep()
     });
 });
 

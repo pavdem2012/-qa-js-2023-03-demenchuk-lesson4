@@ -6,6 +6,8 @@ describe('nameIsValid unit tests coverage', () => {
      */
 
     it('test loads without error', () => {
+        reporter.epic('Unit Tests')
+            .feature('nameIsValid')
         expect(nameIsValid).toBeDefined();
         expect(typeof nameIsValid).toBe('function');
     });
@@ -14,6 +16,8 @@ describe('nameIsValid unit tests coverage', () => {
      */
 
     it('correct operand input', () => {
+        reporter.epic('Unit Tests')
+            .feature('nameIsValid')
         expect(nameIsValid('Ян')).toBe(true);
     });
 
@@ -22,6 +26,8 @@ describe('nameIsValid unit tests coverage', () => {
      */
 
     it('throw error when operand lenth < 2', () => {
+        reporter.epic('Unit Tests')
+            .feature('nameIsValid')
         expect(nameIsValid('Я')).toBe(false);
     });
     /**
@@ -29,6 +35,8 @@ describe('nameIsValid unit tests coverage', () => {
      */
 
     it('throw error when operand includes space character', () => {
+        reporter.epic('Unit Tests')
+            .feature('nameIsValid')
         expect(nameIsValid('Я н')).toBe(false);
         expect(nameIsValid(' Я н ')).toBe(false);
         expect(nameIsValid(' Ян ')).toBe(false);
@@ -38,6 +46,8 @@ describe('nameIsValid unit tests coverage', () => {
      */
 
     it('should throw an error if the operand is not a string', () => {
+        reporter.epic('Unit Tests')
+            .feature('nameIsValid')
         expect(nameIsValid(7)).toBe(false);
     });
 });
@@ -47,6 +57,8 @@ describe('fullTrim unit tests coverage', () => {
      */
 
     it('test loads without error', () => {
+        reporter.epic('Unit Tests')
+            .feature('fullTrim')
         expect(fullTrim).toBeDefined();
         expect(typeof fullTrim).toBe('function');
     });
@@ -55,6 +67,8 @@ describe('fullTrim unit tests coverage', () => {
      */
 
     it('correct operand including space characters', () => {
+        reporter.epic('Unit Tests')
+            .feature('fullTrim')
         expect(fullTrim('День космонавтики')).toBe('Денькосмонавтики');
         expect(fullTrim(' Денькосмонавтики ')).toBe('Денькосмонавтики');
         expect(fullTrim(' День космонавтики ')).toBe('Денькосмонавтики');
@@ -64,6 +78,8 @@ describe('fullTrim unit tests coverage', () => {
      */
 
     it('correct operand without space character', () => {
+        reporter.epic('Unit Tests')
+            .feature('fullTrim')
         expect(fullTrim('Денькосмонавтики')).toBe('Денькосмонавтики');
     });
     /**
@@ -71,6 +87,8 @@ describe('fullTrim unit tests coverage', () => {
      */
 
     it('correct operand if input contaihs empty string, null or undefined', () => {
+        reporter.epic('Unit Tests')
+            .feature('fullTrim')
         expect(fullTrim('')).toEqual('');
         expect(fullTrim(null)).toEqual('');
         expect(fullTrim(undefined)).toEqual('');
@@ -80,6 +98,8 @@ describe('fullTrim unit tests coverage', () => {
      */
 
     it('should throw an error if the operand is not a string', () => {
+        reporter.epic('Unit Tests')
+            .feature('fullTrim')
         expect(() => fullTrim(123)).toThrow();
         expect(() => fullTrim({ key: 'value' })).toThrow();
     });
@@ -90,6 +110,8 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     it('test loads without error', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(getTotal).toBeDefined();
         expect(typeof getTotal).toBe('function');
     });
@@ -98,6 +120,7 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     test.each`
+    
     items                                           | discount | expected
     ${[{ price: 10, quantity: 10 }]}                | ${0}     | ${100}
     ${[{ price: 10, quantity: 1 }]}                 | ${0}     | ${10}
@@ -105,7 +128,10 @@ describe('getTotal function unit tests coverage', () => {
     ${[{ price: 10, quantity: 0 }]}                 | ${0}     | ${0}
     ${[{ price: 10, quantity: 10 }]}                | ${10}    | ${90}
     ${[{ price: 10, quantity: 10 }]}                | ${100}   | ${0}
+    
   `('returns $expected when given items $items and discount $discount', ({ items, discount, expected }) => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(getTotal(items, discount)).toBe(expected);
     });
     /**
@@ -113,6 +139,8 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     it('throws an error when discount is not a number', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(() => getTotal([{ price: 10, quantity: 10 }], 'invalid discount')).toThrow('Скидка должна быть числом');
     });
     /**
@@ -120,12 +148,16 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     it('throws an error when discount is negative', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(() => getTotal([{ price: 10, quantity: 10 }], -10)).toThrow('Процент скидки не может быть отрицательным');
     });
     /**
      * Тестирование функции getTotal, когда скидка равна 100%
      */
     it('returns 0 when discount is  equal to 100', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(getTotal([{ price: 10, quantity: 10 }], 100)).toBe(0);
     });
     /**
@@ -133,6 +165,8 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     it('returns the total without discount when items have 0 quantity', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(getTotal([{ price: 10, quantity: 0 }])).toBe(0);
         expect(getTotal([{ price: 10, quantity: 0 }, { price: 5, quantity: 0 }])).toBe(0);
     });
@@ -141,6 +175,8 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     it('returns the total without discount when discount is 0', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(getTotal([{ price: 10, quantity: 10 }], 0)).toBe(100);
         expect(getTotal([{ price: 5, quantity: 5 }, { price: 10, quantity: 10 }], 0)).toBe(125);
     });
@@ -149,6 +185,8 @@ describe('getTotal function unit tests coverage', () => {
      */
 
     it('returns the total with discount when items have quantity greater than 0 and discount is between 0 and 100', () => {
+        reporter.epic('Unit Tests')
+            .feature('getTotal')
         expect(getTotal([{ price: 10, quantity: 10 }], 10)).toBe(90);
         expect(getTotal([{ price: 5, quantity: 5 }, { price: 10, quantity: 10 }], 25)).toBe(93.75);
     });
