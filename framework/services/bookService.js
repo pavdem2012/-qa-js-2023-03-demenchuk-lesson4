@@ -2,22 +2,22 @@ import config, {HEADERS} from "../config/config.js";
 import axios from "axios";
 let url = config.BOOKSTORE_BASE_URL + config.BOOKS_OPS_PATH;
 let requestData;
-let responce;
+let response;
 
 export const getBook = async ({token,isbn}) => {
     url = `${url.slice(0, -1)}?ISBN=${isbn}`;
-    responce = await axios.get(url, {
+    response = await axios.get(url, {
         headers: { ...HEADERS, Authorization: `Bearer ${token}` },
         validateStatus: false
     });
-    return responce;
+    return response;
 };
 export const getBooks = async ({token}) => {
-    responce = await axios.get(url, {
+    response = await axios.get(url, {
         headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
-    return responce;
+    return response;
 };
 export const postBook = async ({token,isbn,uuid}) => {
     requestData = {
@@ -28,23 +28,23 @@ export const postBook = async ({token,isbn,uuid}) => {
             }
         ]
     };
-    responce = await axios.post(url, requestData,{
+    response = await axios.post(url, requestData,{
         headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
 
-    return responce;
+    return response;
 };
 export const  updateBook = async ({token, isbna, isbn, uuid}) =>{
     requestData = {
         "userId": `${uuid}`,
         "isbn": `${isbna}`
     }
-    responce = await axios.put(url+ `/${isbn}`, requestData,{
+    response = await axios.put(url+ `/${isbn}`, requestData,{
         headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
-    return responce;
+    return response;
 };
 export const deleteBook = async ({token, isbna, uuid}) =>{
     url = `${url.slice(0, -1)}`;
@@ -52,10 +52,10 @@ export const deleteBook = async ({token, isbna, uuid}) =>{
         "isbn": `${isbna}`,
         "userId": `${uuid}`
     }
-    responce = await axios.delete(url, {
+    response = await axios.delete(url, {
         headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
         , data: requestData});
-    return responce;
+    return response;
 }
 
