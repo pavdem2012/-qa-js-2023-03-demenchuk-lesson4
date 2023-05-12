@@ -18,7 +18,7 @@ import {
     updateBook,
     deleteBook
 } from "../framework/services/bookService";
-//import 'jest-extended';
+import 'jest-extended';
 import expect from "expect";
 
 //import { reporters } from "../jest.config.js";
@@ -74,7 +74,7 @@ describe('API tests create user', () => {
                 .startStep('Checking the returned response body message')
         expect(response.data.message).toBe('Passwords must have at least one non alphanumeric character, one digit (\'0\'-\'9\'), one uppercase (\'A\'-\'Z\'), one lowercase (\'a\'-\'z\'), one special character and Password must be eight characters or longer.');
         reporter.endStep(Status.Passed)
-                .endStep(Status.Passed)
+                .endStep()
 
 
     });
