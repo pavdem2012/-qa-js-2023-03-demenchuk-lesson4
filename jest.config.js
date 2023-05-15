@@ -2,7 +2,25 @@ module.exports =  {
     testEnvironment: 'node',
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.js', 'specs/**/*.js'],
-    reporters: ['default'],
+    // reporters: ['default',
+    //     ["./node_modules/jest-html-reporter", {
+    //         "pageTitle": "Отчет о прохождении тестов",
+    //         "includeFailureMsg": true,
+
+    //     }]
+    // ],
+    reporters: ['default',
+        ["./node_modules/jest-html-reporter", {
+            "pageTitle": "Отчет о прохождении тестов",
+            "includeFailureMsg": true,
+            }],
+            'jest-allure'
+        ],
+    testRunner: 'jest-jasmine2',
+    setupFilesAfterEnv: [
+        'jest-extended',
+        'jest-allure/dist/setup'
+        ],
     moduleFileExtensions: ['js', 'json'],
     transform: {
       '^.+\\.jsx?$': 'babel-jest',
@@ -12,4 +30,5 @@ module.exports =  {
         testTimeout: 50000,
       },
       verbose: true,
+
 }

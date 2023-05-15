@@ -3,3 +3,5 @@ docs
 out
 coverage
 .idea
+test-report.html
+allure-results/*.xml
