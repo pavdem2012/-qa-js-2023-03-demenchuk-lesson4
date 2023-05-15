@@ -1,32 +1,31 @@
-import config, {headers} from "../config/config.js";
+import config, {HEADERS} from "../config/config.js";
 import axios from "axios";
-import {token} from "../../specs/api.test";
-let url = config.baseUrl;
-let responce;
+let url = config.BOOKSTORE_BASE_URL;
+let response;
 
 
 
 
 export const wtBearerResp = async ({ requestData , path }) => {
-    responce = await axios.post(url + path, requestData, {
-        headers: {...headers},
+    response = await axios.post(url + path, requestData, {
+        headers: {...HEADERS},
         validateStatus: false
     });
-    return responce;
+    return response;
 };
 export const bearerGetResp = async ({path,token}) => {
-    responce = await axios.get(url + path, {
-        headers: {...headers, Authorization: `Bearer ${token}`},
+    response = await axios.get(url + path, {
+        headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
         });
-    return responce;
+    return response;
 };
 
 export const bearerDelResp = async ({path,token}) => {
-    responce = await axios.delete(url + path, {
-        headers: {...headers, Authorization: `Bearer ${token}`},
+    response = await axios.delete(url + path, {
+        headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
     });
 
-    return responce;
+    return response;
 };
