@@ -6,9 +6,11 @@ name: only test
 on:
   workflow_dispatch: # Запуск ручками
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] #пуш в майн
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] #пулл в мэйн
+  schedule:
+    - cron: '* 8,18 * * *' #каждый день в 8 и 18
 
 jobs:
   build:
