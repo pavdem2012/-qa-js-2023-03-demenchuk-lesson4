@@ -35,8 +35,9 @@ jobs:
     - run: npm test #Запуск тестов
 
     - name: Upload report
-      uses:  actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3
       with:
-          name: report
+          name: report, report_html
           if-no-files-found: error
-          path: ./jest-html-report
+          path: ./jest-html-report, .test-report.html
+
