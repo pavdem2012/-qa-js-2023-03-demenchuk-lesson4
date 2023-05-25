@@ -80,7 +80,7 @@ jobs:
 #        clean: true
 #        token: ${{ secrets.TOKEN }}
 
-    - name: Deploy
+
     deploy:
       environment:
         name: github-pages
