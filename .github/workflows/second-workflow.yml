@@ -73,10 +73,24 @@ jobs:
         if-no-files-found: error
         path: ./test-report.html
 
-    - name: Deploy
+    - name: Deploy jest-html-report
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: jest-html-report
+        clean: true
+        token: ${{ secrets.TOKEN }}
+
+    - name: Deploy coverage
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: coverage
+        clean: true
+        token: ${{ secrets.TOKEN }}
+
+    - name: Deploy test-report.html
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: test-report.html
         clean: true
         token: ${{ secrets.TOKEN }}
 
