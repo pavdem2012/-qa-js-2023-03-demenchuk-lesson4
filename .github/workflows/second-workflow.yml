@@ -18,9 +18,9 @@ permissions: # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHu
   id-token: write
 
 # Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
+#concurrency:
+#  group: "pages"
+#  cancel-in-progress: true
 
 jobs:
   build:
