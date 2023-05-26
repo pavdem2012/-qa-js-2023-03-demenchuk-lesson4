@@ -74,19 +74,13 @@ jobs:
         path: ./test-report.html
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4.4.1
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: jest-html-report
         clean: true
         token: ${{ secrets.TOKEN }}
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ inputs.name }}
-        path: ${{ runner.qa-js-2023-03-demenchuk-lesson4.qa-js-2023-03-demenchuk-lesson4 }}/jest-html-report
-        retention-days: ${{ inputs.retention-days }}
-        if-no-files-found: error
+
 
 
 #    deploy:
