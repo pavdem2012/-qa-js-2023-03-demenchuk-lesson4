@@ -73,10 +73,7 @@ jobs:
         if-no-files-found: error
         path: ./test-report.html
 
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+
 
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
@@ -85,7 +82,10 @@ jobs:
         clean: true
         token: ${{ secrets.TOKEN }}
 
-
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
 
 #    deploy:
