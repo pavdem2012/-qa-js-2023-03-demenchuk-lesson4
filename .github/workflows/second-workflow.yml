@@ -84,10 +84,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.name }}
-        path: ${{ runner.temp }}/jest-html-report.tar
+        path: ${{ runner.temp }}/jest-html-report
         retention-days: ${{ inputs.retention-days }}
         if-no-files-found: error
-        continue-on-error: true
+
 
 #    deploy:
 #      environment:
