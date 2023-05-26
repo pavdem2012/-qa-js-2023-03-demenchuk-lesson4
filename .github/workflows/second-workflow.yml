@@ -57,7 +57,7 @@ jobs:
       with:
         name: jest-html-report
         if-no-files-found: error
-        path: .docs/jest-html-report
+        path: ./jest-html-report
 
     - name: Upload coverage
       uses: actions/upload-artifact@v3
@@ -76,7 +76,7 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
-        folder: ./docs/jest-html-report
+        folder: jest-html-report
         clean: true
         token: ${{ secrets.TOKEN }}
 

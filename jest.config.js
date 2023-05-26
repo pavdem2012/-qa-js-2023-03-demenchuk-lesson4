@@ -11,7 +11,7 @@ module.exports =  {
     // ],
     reporters: ['default',
         ["jest-html-reporters", {
-            "publicPath": ".docs/jest-html-report",
+            "publicPath": "./jest-html-report",
             "filename": "report.html"
         }
         ],
