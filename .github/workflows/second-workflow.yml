@@ -79,7 +79,7 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: jest-html-report
-        clean: true
+        clean: false
         token: ${{ secrets.TOKEN }}
 
     - name: Checkout
