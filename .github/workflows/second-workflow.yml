@@ -80,7 +80,12 @@ jobs:
         clean: true
         token: ${{ secrets.TOKEN }}
 
-
+    - name: Upload GitHub Pages artifact
+      uses: actions/upload-pages-artifact@v1.0.8
+      with:
+        folder: jest-html-report
+        clean: true
+        token: ${{ secrets.TOKEN }}
 
 
 #    deploy:
