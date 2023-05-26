@@ -76,7 +76,7 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
-        folder: ./jest-html-report
+        folder: jest-html-report
         clean: true
         token: ${{ secrets.TOKEN }}
 
