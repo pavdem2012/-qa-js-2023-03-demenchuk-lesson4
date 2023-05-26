@@ -57,7 +57,7 @@ jobs:
       with:
         name: jest-html-report
         if-no-files-found: error
-        path: ./jest-html-report
+        path: .docs/jest-html-report
 
     - name: Upload coverage
       uses: actions/upload-artifact@v3
