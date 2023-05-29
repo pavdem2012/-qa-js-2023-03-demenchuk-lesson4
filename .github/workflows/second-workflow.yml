@@ -66,15 +66,6 @@ jobs:
         if-no-files-found: error
         path: ./coverage
 
-    - name: Upload test-report
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-report
-        if-no-files-found: error
-        path: ./test-report.html
-
-
-
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
