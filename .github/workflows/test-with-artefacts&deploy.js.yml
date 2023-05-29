@@ -33,6 +33,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload Jest-HTML-report
+      continue-on-error: true
       uses: actions/upload-artifact@v3
       with: 
         name: report
@@ -40,6 +41,7 @@ jobs:
         path: ./jest-html-report
 
     - name: Upload test-report.html
+      continue-on-error: true
       uses: actions/upload-artifact@v3
       with:
         name: report
@@ -47,6 +49,7 @@ jobs:
         path: test-report.html
 
     - name: Upload coverage
+      continue-on-error: true
       uses: actions/upload-artifact@v3
       with: 
         name: coverage
