@@ -63,7 +63,7 @@ describe('API tests create user', () => {
         reporter.endStep(Status.Passed)
                 .startStep('Checking the response')
                 .startStep('Checking the returned status code')
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(401);
         reporter.endStep(Status.Passed)
                 .startStep('Checking the returned status text')
         expect(response.statusText).toBe('Bad Request')
