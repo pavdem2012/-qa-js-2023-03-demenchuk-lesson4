@@ -69,7 +69,7 @@ jobs:
     - name: send telegram message on push
       uses: appleboy/telegram-action@master
       with:
-        to: -1001918018824
+        to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
           ${{ github.actor }} created commit:
@@ -78,3 +78,4 @@ jobs:
           Repository: ${{ github.repository }}
 
           See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+          See report: https://pavdem2012.github.io/qa-js-2023-03-demenchuk-lesson4/jest-html-report/
