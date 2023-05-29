@@ -46,7 +46,7 @@ jobs:
       with:
         name: test-report.html
         if-no-files-found: error
-        path: ./test-report.html
+        path: ./report//test-report.html
 
     - name: Upload coverage
       continue-on-error: true
@@ -54,7 +54,7 @@ jobs:
       with: 
         name: coverage
         if-no-files-found: error
-        path: .report/coverage
+        path: ./report/coverage
 
     - name: Deploy jest-html-report
       uses: JamesIves/github-pages-deploy-action@v4
