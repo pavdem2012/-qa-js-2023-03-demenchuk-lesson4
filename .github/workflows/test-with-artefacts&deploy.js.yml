@@ -78,3 +78,5 @@ jobs:
           Repository: ${{ github.repository }}
 
           See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+          
+          See report: https://pavdem2012.github.io/qa-js-2023-03-demenchuk-lesson4/jest-html-report/
