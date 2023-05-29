@@ -38,7 +38,7 @@ jobs:
       with: 
         name: report
         if-no-files-found: error
-        path: ./jest-html-report
+        path: ./report/jest-html-report
 
     - name: Upload test-report.html
       continue-on-error: true
@@ -46,7 +46,7 @@ jobs:
       with:
         name: test-report.html
         if-no-files-found: error
-        path: ./report//test-report.html
+        path: ./test-report.html
 
     - name: Upload coverage
       continue-on-error: true
