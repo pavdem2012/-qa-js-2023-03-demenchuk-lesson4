@@ -12,13 +12,9 @@ module.exports =  {
     reporters: ['default',
         ["jest-html-reporters", {
             "publicPath": "./jest-html-report",
-            "filename": "index.html"
+            "filename": "report.html"
         }
         ],
-        ["./node_modules/jest-html-reporter", {
-            "pageTitle": "Отчет о прохождении тестов",
-            "includeFailureMsg": true,
-        }],
             'jest-allure'
         ],
     testRunner: 'jest-jasmine2',
