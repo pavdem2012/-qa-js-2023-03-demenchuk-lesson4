@@ -44,7 +44,7 @@ jobs:
       continue-on-error: true
       uses: actions/upload-artifact@v3
       with:
-        name: report
+        name: test-report.html
         if-no-files-found: error
         path: ./test-report.html
 
