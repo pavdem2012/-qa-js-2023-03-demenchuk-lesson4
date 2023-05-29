@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1685363499261" clover="3.2.0">
-  <project timestamp="1685363499261" name="All files">
+<coverage generated="1685379265823" clover="3.2.0">
+  <project timestamp="1685379265823" name="All files">
     <metrics statements="24" coveredstatements="24" conditionals="11" coveredconditionals="10" methods="9" coveredmethods="9" elements="44" coveredelements="43" complexity="0" loc="24" ncloc="24" packages="1" files="1" classes="1"/>
     <file name="app.js" path="/home/runner/work/qa-js-2023-03-demenchuk-lesson4/qa-js-2023-03-demenchuk-lesson4/src/app.js">
       <metrics statements="24" coveredstatements="24" conditionals="11" coveredconditionals="10" methods="9" coveredmethods="9"/>
