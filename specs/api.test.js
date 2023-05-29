@@ -278,7 +278,7 @@ describe("API tests with books",()=>{
         expect(response.statusText).toBe('OK')
         expect(response.data.userId).toEqual(UUID);
         expect(response.data.username).toEqual(validRequestData.userName);
-        expect(response.data.books[0].isbn).toEqual(ISBN0);
+        expect(response.data.books[0].isbn).toEqual(ISBN1);
         expect(response.data.books[0].title).toEqual(expect.any(String));
         expect(response.data.books[0].subTitle).toEqual(expect.any(String));
         expect(response.data.books[0].author).toEqual(expect.any(String));
