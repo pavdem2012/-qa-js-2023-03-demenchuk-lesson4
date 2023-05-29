@@ -32,12 +32,19 @@ jobs:
       run: npm run test:coverage
       continue-on-error: true
 
-    - name: Upload report
+    - name: Upload Jest-HTML-report
       uses: actions/upload-artifact@v3
       with: 
         name: report
         if-no-files-found: error
         path: ./jest-html-report
+
+    - name: Upload test-report.html
+      uses: actions/upload-artifact@v3
+      with:
+        name: report
+        if-no-files-found: error
+        path: .test-report.html
 
     - name: Upload coverage
       uses: actions/upload-artifact@v3
