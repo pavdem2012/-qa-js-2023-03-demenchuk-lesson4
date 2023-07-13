@@ -30,7 +30,7 @@ jobs:
       run: npm ci
 
     - name: Run tests
-      run: test:coverage
+      run: npm test:coverage
       continue-on-error: true
 
     - name: Upload Jest-HTML-report
