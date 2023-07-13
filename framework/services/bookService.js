@@ -40,7 +40,7 @@ export const  updateBook = async ({token, isbna, isbn, uuid}) =>{
         "userId": `${uuid}`,
         "isbn": `${isbna}`
     }
-    response = await axios.put(url+ `/${isbn}`, requestData,{
+    response = await axios.put(`${url}/${isbn}`, requestData,{
         headers: {...HEADERS, Authorization: `Bearer ${token}`},
         validateStatus: false
     });

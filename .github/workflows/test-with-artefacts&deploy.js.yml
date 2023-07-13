@@ -1,0 +1,83 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Tests with upload artifacts $ deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install deps
+      run: npm ci
+
+    - name: Run tests
+      run: npm run test:coverage
+      continue-on-error: true
+
+    - name: Upload Jest-HTML-report
+      continue-on-error: true
+      uses: actions/upload-artifact@v3
+      with: 
+        name: report
+        if-no-files-found: error
+        path: ./report/jest-html-report
+
+    - name: Upload test-report.html
+      continue-on-error: true
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-report.html
+        if-no-files-found: error
+        path: ./test-report.html
+
+    - name: Upload coverage
+      continue-on-error: true
+      uses: actions/upload-artifact@v3
+      with: 
+        name: coverage
+        if-no-files-found: error
+        path: ./report/coverage
+
+    - name: Deploy jest-html-report
+      uses: JamesIves/github-pages-deploy-action@v4
+      continue-on-error: true
+      with:
+        folder: report
+        clean: true
+        token: ${{ secrets.TOKEN }}
+
+
+
+    - name: send telegram message on push
+      uses: appleboy/telegram-action@master
+      with:
+        to: -${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ${{ github.actor }} created commit:
+          Commit message: ${{ github.event.commits[0].message }}
+
+          Repository: ${{ github.repository }}
+
+          View the changes by link: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+          
+          View the report after five minutes by link: https://pavdem2012.github.io/qa-js-2023-03-demenchuk-lesson4/jest-html-report/

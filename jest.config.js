@@ -11,8 +11,8 @@ module.exports =  {
     // ],
     reporters: ['default',
         ["jest-html-reporters", {
-            "publicPath": "./jest-html-report",
-            "filename": "report.html"
+            "publicPath": "report/jest-html-report",
+            "filename": "index.html"
         }
         ],
         ["./node_modules/jest-html-reporter", {
